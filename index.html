@@ -357,6 +357,37 @@
         .prognoz-bar-bg { background: rgba(255,255,255,0.08); height: 5px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
         .prognoz-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
         .prognoz-warn { font-size: 12px; margin-top: 10px; padding: 8px 12px; border-radius: 10px; }
+
+        /* Income */
+        .income-card {
+            margin: 0 16px 10px; background: linear-gradient(135deg,#0d2d1a,#0a3d1f);
+            border-radius: 20px; padding: 16px 18px;
+            border: 1px solid rgba(50,215,75,0.25);
+        }
+        .income-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .income-label { font-size:12px; color:#32d74b; letter-spacing:0.5px; font-weight:600; }
+        .income-toggle { font-size:12px; color:var(--gray); cursor:pointer; }
+        .income-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+        .income-amount { font-size:24px; font-weight:800; color:#32d74b; }
+        .income-balance { font-size:13px; }
+        .income-balance.positive { color:#32d74b; }
+        .income-balance.negative { color:#ff453a; }
+        .income-input-row { display:flex; gap:8px; margin-top:12px; }
+        .income-input {
+            flex:1; background:rgba(255,255,255,0.08); border:none; border-radius:12px;
+            color:#fff; padding:12px 14px; font-size:15px;
+        }
+        .income-add-btn {
+            background:#32d74b; color:#000; border:none; border-radius:12px;
+            padding:12px 18px; font-weight:700; font-size:15px; cursor:pointer; white-space:nowrap;
+        }
+        .income-history { margin-top:10px; }
+        .income-item {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 0; border-bottom:0.5px solid rgba(255,255,255,0.07); font-size:13px;
+        }
+        .income-item:last-child { border-bottom:none; }
+        .income-del { background:none; border:none; color:#ff453a; font-size:14px; cursor:pointer; opacity:0.5; }
     </style>
 </head>
 <body>
@@ -425,7 +456,7 @@
         <div class="cat-label">КАТЕГОРИЯ</div>
         <div class="cat-grid" id="cat-selector">
             <div class="cat-btn active" data-cat="Oziq-ovqat" onclick="setCat('Oziq-ovqat',this)">
-                <span class="cat-icon">🛒</span><span class="cat-name">Ovqat</span>
+                <span class="cat-icon">🛒</span><span class="cat-name">Oziq-Ovqat</span>
             </div>
             <div class="cat-btn" data-cat="Transport" onclick="setCat('Transport',this)">
                 <span class="cat-icon">🚗</span><span class="cat-name">Transport</span>
@@ -458,6 +489,25 @@
 
     <!-- For balance -->
     <div class="for-balance-row" id="for-balance"></div>
+
+    <!-- Income -->
+    <div class="income-card">
+        <div class="income-header">
+            <span class="income-label">💚 ДАРОМАД (ПРИХОД)</span>
+            <span class="income-toggle" onclick="toggleIncomeHistory()">Тарих ▾</span>
+        </div>
+        <div class="income-row">
+            <div>
+                <div class="income-amount" id="income-total">0 сўм</div>
+                <div class="income-balance" id="income-balance"></div>
+            </div>
+        </div>
+        <div class="income-input-row">
+            <input class="income-input" id="income-input" type="text" placeholder="Маош 3000000" onkeydown="if(event.key==='Enter') addIncome()">
+            <button class="income-add-btn" onclick="addIncome()">+ Қўш</button>
+        </div>
+        <div class="income-history" id="income-history" style="display:none;"></div>
+    </div>
 
     <!-- Prognoz -->
     <div class="prognoz-card" id="prognoz-card"></div>
@@ -774,6 +824,7 @@ function renderMain() {
     renderCatStats();
     renderForBalance();
     renderPrognoz();
+    renderIncome();
     renderList();
     checkLimitAlerts(pct);
 }
@@ -1117,6 +1168,83 @@ function downloadCSV(content, filename) {
 }
 
 
+// ══════════════════════════════════
+// DAROMAD (INCOME) LOGIC
+// ══════════════════════════════════
+function getIncomes() {
+    try { return JSON.parse(localStorage.getItem('incomes') || '[]'); } catch(e) { return []; }
+}
+function saveIncomes(arr) { localStorage.setItem('incomes', JSON.stringify(arr)); }
+
+function addIncome() {
+    const raw = document.getElementById('income-input').value.trim();
+    const match = raw.match(/^(.+?)\s+([\d\s]+)$/);
+    if (!match) {
+        document.getElementById('income-input').style.outline = '2px solid var(--red)';
+        setTimeout(() => document.getElementById('income-input').style.outline = '', 1000);
+        return;
+    }
+    const name = match[1].trim();
+    const amt  = Number(match[2].replace(/\s/g,''));
+    const incomes = getIncomes();
+    incomes.unshift({ name, amt, date: new Date().toLocaleDateString('uz-UZ') });
+    saveIncomes(incomes);
+    document.getElementById('income-input').value = '';
+    renderIncome();
+}
+
+function deleteIncome(idx) {
+    const incomes = getIncomes();
+    incomes.splice(idx, 1);
+    saveIncomes(incomes);
+    renderIncome();
+}
+
+function toggleIncomeHistory() {
+    const el = document.getElementById('income-history');
+    const btn = document.querySelector('.income-toggle');
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+        btn.textContent = 'Тарих ▴';
+    } else {
+        el.style.display = 'none';
+        btn.textContent = 'Тарих ▾';
+    }
+}
+
+function renderIncome() {
+    const incomes = getIncomes();
+    // Shu oy incomes
+    const now = new Date();
+    const monthIncomes = incomes.filter(i => {
+        const d = new Date(i.date);
+        return !isNaN(d) && d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+    });
+    const totalIncome = monthIncomes.reduce((s,i) => s+i.amt, 0);
+
+    document.getElementById('income-total').textContent = fmt(totalIncome);
+
+    // Faqat daromad ko'rsatiladi — xarajat bilan bog'liq emas
+    const balEl = document.getElementById('income-balance');
+    balEl.className = 'income-balance positive';
+    balEl.textContent = incomes.length > 0 ? incomes.length + ' та киrim · shu oy: ' + monthIncomes.length + ' та' : '';
+
+    // History
+    document.getElementById('income-history').innerHTML = incomes.slice(0,10).map((i,idx) => `
+        <div class="income-item">
+            <div>
+                <span style="font-weight:600;">${i.name}</span>
+                <span style="color:var(--gray);font-size:11px;margin-left:6px;">${i.date}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="color:#32d74b;font-weight:600;">+${fmt(i.amt)}</span>
+                <button class="income-del" onclick="deleteIncome(${idx})">✕</button>
+            </div>
+        </div>
+    `).join('') || '<div style="padding:10px 0;color:var(--gray);font-size:12px;">Даромад йўқ</div>';
+}
+
+
 // ── Alert state ──
 let alertShown70 = false, alertShown90 = false;
 let trendChartObj = null;
@@ -1183,7 +1311,7 @@ function renderForBalance() {
         <div class="for-balance-card" onclick="setCatFilterById('__uy')" style="cursor:pointer;">
             <div class="for-balance-label">🏡 УЙ УЧУН</div>
             <div class="for-balance-amount" style="color:#ffd60a">${fmt(uy)}</div>
-            <div class="for-balance-sub">${cntUy} та харажат · ${pUy}%</div
+            <div class="for-balance-sub">${cntUy} та харажат · ${pUy}%</div>
         </div>
     `;
 }
