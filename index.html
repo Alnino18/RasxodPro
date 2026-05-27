@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <meta name="application-name" content="X Rasxod">
-    <meta name="description" content="Shaxsiy xarajatlar hisobi">
+    <meta name="description" content="Shaxsiy xarajatlar hisobchi">
     <meta name="theme-color" content="#0a84ff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -401,7 +401,7 @@
 
 <!-- MAIN PAGE -->
 <div id="page-main">
-    <div class="header" style="display:flex;justify-content:space-between;align-items:flex-end;"><h1>Х RASXOD</h1><div style="display:flex;gap:4px;"><button class="export-icon-btn" onclick="openExportModal()" title="Eksport">📤</button><button class="export-icon-btn" onclick="openPinSettings()" title="PIN">🔑</button></div></div>
+    <div class="header" style="display:flex;justify-content:space-between;align-items:flex-end;"><h1>Ҳисоб</h1><div style="display:flex;gap:4px;"><button class="export-icon-btn" onclick="openExportModal()" title="Eksport">📤</button><button class="export-icon-btn" onclick="openPinSettings()" title="PIN">🔑</button></div></div>
 
     <div class="main-card">
         <div style="color:var(--gray);font-size:12px;letter-spacing:1px;">ЖАМИ ХАРАЖАТ</div>
@@ -409,7 +409,7 @@
 
         <div class="limit-container">
             <div class="limit-info">
-                <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">6,000,000</b> <span class="limit-edit-icon">✎</span></span>
+                <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">5,000,000</b> <span class="limit-edit-icon">✎</span></span>
                 <span id="percent-text">0%</span>
             </div>
             <div class="progress-bg"><div id="progress-bar" class="progress-fill"></div></div>
@@ -649,8 +649,8 @@
 </div>
 
 <script>
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwuDWK9bs54SAPlOJ03RvQVYnQRzyLPo94JFgTGhaS3cHLs17rYSi_rYtwWLfAyR86h/exec";
-let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxFuXTvK8IzuzgNWOp5MUhtd7T57CIueFZcRm8SANZg-kbpytzQjdImxxbJAB7PixmB/exec";
+let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 5000000;
 
 const CATS = {
     "Oziq-ovqat": { icon: "🛒", color: "#ff9f0a" },
