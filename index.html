@@ -1387,13 +1387,27 @@
 
             <div class="modal-label">RANG (Ixtiyoriy)</div>
             <div style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;" id="new-cat-colors">
-                <div class="color-picker-btn active" data-color="#ff453a" style="background:#ff453a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid #fff;"></div>
-                <div class="color-picker-btn" data-color="#ff9f0a" style="background:#ff9f0a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
-                <div class="color-picker-btn" data-color="#ffd60a" style="background:#ffd60a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
-                <div class="color-picker-btn" data-color="#32d74b" style="background:#32d74b; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
-                <div class="color-picker-btn" data-color="#64d2ff" style="background:#64d2ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
-                <div class="color-picker-btn" data-color="#0a84ff" style="background:#0a84ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
-                <div class="color-picker-btn" data-color="#bf5af2" style="background:#bf5af2; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn active" data-color="#ff453a"
+                    style="background:#ff453a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid #fff;">
+                </div>
+                <div class="color-picker-btn" data-color="#ff9f0a"
+                    style="background:#ff9f0a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
+                <div class="color-picker-btn" data-color="#ffd60a"
+                    style="background:#ffd60a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
+                <div class="color-picker-btn" data-color="#32d74b"
+                    style="background:#32d74b; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
+                <div class="color-picker-btn" data-color="#64d2ff"
+                    style="background:#64d2ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
+                <div class="color-picker-btn" data-color="#0a84ff"
+                    style="background:#0a84ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
+                <div class="color-picker-btn" data-color="#bf5af2"
+                    style="background:#bf5af2; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;">
+                </div>
             </div>
 
             <div class="modal-btns">
@@ -1479,7 +1493,7 @@
     </div>
 
     <script>
-        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxKaGOLzAx-KGPtZEnaaiveoowEgTxfxnROdyjSivRt0tjcvS3K4Q4f6Mi4tVYnySw/exec";
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwjBBzb216vDwZfzPJ9pC1kX4obUm-JPQLb2F8OPVS6zgC43fTo4s-QAa4x8k3jDL3E/exec";
         let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
 
         let CATS = {
@@ -1501,7 +1515,7 @@
             try {
                 const customCats = JSON.parse(localStorage.getItem('customCats') || '{}');
                 CATS = { ...CATS, ...customCats };
-            } catch(e) {}
+            } catch (e) { }
             generateDynamicStyles();
         }
 
@@ -1509,7 +1523,7 @@
             let css = '';
             Object.entries(CATS).forEach(([k, v]) => {
                 let rgbaBg = v.color;
-                try { if(v.color.startsWith('#')) rgbaBg = hexToRgba(v.color, 0.2); } catch(e){}
+                try { if (v.color.startsWith('#')) rgbaBg = hexToRgba(v.color, 0.2); } catch (e) { }
                 css += `
                 .cat-btn[data-cat="${k}"].active {
                     background: ${rgbaBg} !important;
@@ -2157,9 +2171,9 @@
             document.getElementById('new-cat-name').value = '';
             document.getElementById('new-cat-icon').value = '';
             document.getElementById('add-cat-modal').classList.add('show');
-            
+
             document.querySelectorAll('#new-cat-colors .color-picker-btn').forEach(btn => {
-                btn.onclick = function() {
+                btn.onclick = function () {
                     document.querySelectorAll('#new-cat-colors .color-picker-btn').forEach(b => b.style.borderColor = 'transparent');
                     this.style.borderColor = '#fff';
                     newCatColor = this.dataset.color;
