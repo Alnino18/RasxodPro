@@ -1493,7 +1493,7 @@
     </div>
 
     <script>
-        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyu3zJwyzlMe0r9OtbXYCTMpxL7BEAXqwSoTmvpex38Zp8_IU8LUG9UeVvZ1wBMbFcp/exec";
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzbRf1iN8xhrCTS9FX5nvbg0VyN_Rg1JIAF9UvTJLzIfZQa22YyF5DIROAv57kxZ2tb/exec";
         let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
 
         let CATS = {
@@ -1660,54 +1660,24 @@
             if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
         }
 
-        // JSONP yordamida CORS muammosini hal qilamiz
-        function loadJsonp(url) {
-            return new Promise((resolve, reject) => {
-                const cbName = '_gs_cb_' + Date.now();
-                const script = document.createElement('script');
-                const timeout = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Timeout — server javob bermadi'));
-                }, 10000);
-                function cleanup() {
-                    clearTimeout(timeout);
-                    delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                }
-                window[cbName] = function (data) {
-                    cleanup();
-                    resolve(data);
-                };
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cbName;
-                script.onerror = () => { cleanup(); reject(new Error('Script yuklanmadi')); };
-                document.head.appendChild(script);
-            });
-        }
-
         async function load() {
             loadCustomCats();
             renderCategorySelectors();
             try {
-                console.log("⏳ Yuklanmoqda...");
-                const res = await loadJsonp(GOOGLE_SHEET_URL);
-                if (!res.history) {
-                    console.error("❌ 'history' maydoni yo'q:", res);
-                    return;
-                }
-                console.log("✅ Yuklandi:", res.history.length, "ta yozuv");
+                const r = await fetch(GOOGLE_SHEET_URL + '?t=' + Date.now());
+                const res = await r.json();
+                if (!res.history) return;
                 txs = res.history;
                 if (res.categories) {
-                    const serverCats = {};
-                    Object.entries(res.categories).forEach(([k, v]) => {
-                        serverCats[k] = { icon: v.icon, color: v.color };
-                    });
-                    CATS = { ...serverCats, ...JSON.parse(localStorage.getItem('customCats') || '{}') };
+                    const sc = {};
+                    Object.entries(res.categories).forEach(([k, v]) => { sc[k] = { icon: v.icon, color: v.color }; });
+                    CATS = { ...sc, ...JSON.parse(localStorage.getItem('customCats') || '{}') };
                     generateDynamicStyles();
                     renderCategorySelectors();
                 }
                 renderMain();
             } catch (e) {
-                console.error("❌ Yuklash xatosi:", e.message);
+                console.error("❌ load xatosi:", e.message);
             }
         }
 
@@ -1800,14 +1770,15 @@
             renderAnalysis();
         }
 
-        // "dd.MM.yyyy HH:mm" yoki "dd.MM.yyyy" formatini to'g'ri parse qiladi
+        // Barcha formatlarni parse qiladi:
+        // "dd.MM.yyyy HH:mm", "dd.MM.yyyy", "Mon Jun 01 2026 ...", ISO
         function parseDate(str) {
             if (!str) return null;
             const s = str.toString().trim();
             // dd.MM.yyyy HH:mm  yoki  dd.MM.yyyy
             const m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);
             if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-            // fallback: ISO yoki boshqa
+            // "Mon Jun 01 2026 15:28:00 GMT+0500" — JS Date to'g'ri parse qiladi
             const d = new Date(s);
             return isNaN(d) ? null : d;
         }
