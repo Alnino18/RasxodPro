@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rasxod-v5';
+const CACHE_NAME = 'rasxod-v6';
 const ASSETS = [
   './',
   './index.html',
