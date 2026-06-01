@@ -1660,24 +1660,53 @@
             if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
         }
 
+        // Apps Script doGet orqali ma'lumot olish (gviz CORS muammosi yo'q)
+        async function loadFromSheets() {
+            const url = GOOGLE_SHEET_URL + '?t=' + Date.now();
+            const r = await fetch(url);
+            const json = await r.json();
+            // doGet { history: [...], stats: {...}, categories: {...} qaytaradi
+            const rows = json.history || [];
+            return rows.map(r => ({
+                name: r.name || '',
+                amt: Number(r.amt || 0),
+                date: r.date || '',
+                type: r.type || 'Нақд',
+                cat: r.cat || 'Boshqa',
+                for: r['for'] || 'Ўзим'
+            })).filter(r => r.name && r.amt);
+        }
+
         async function load() {
             loadCustomCats();
             renderCategorySelectors();
+
+            // Avval localStorage dan eski ma'lumotlarni yuklab ko'rsatamiz
             try {
-                const r = await fetch(GOOGLE_SHEET_URL + '?t=' + Date.now());
-                const res = await r.json();
-                if (!res.history) return;
-                txs = res.history;
-                if (res.categories) {
-                    const sc = {};
-                    Object.entries(res.categories).forEach(([k, v]) => { sc[k] = { icon: v.icon, color: v.color }; });
-                    CATS = { ...sc, ...JSON.parse(localStorage.getItem('customCats') || '{}') };
-                    generateDynamicStyles();
-                    renderCategorySelectors();
+                const cached = localStorage.getItem('txsCache');
+                if (cached) {
+                    txs = JSON.parse(cached);
+                    renderMain();
+                    console.log("📦 Cache dan yuklandi:", txs.length, "ta yozuv");
                 }
+            } catch (e) {
+                console.warn("Cache o'qishda xato:", e.message);
+            }
+
+            // Keyin Google Sheets dan yangilaymiz
+            try {
+                const rows = await loadFromSheets();
+                console.log("✅ Sheets dan yuklandi:", rows.length, "ta yozuv");
+                txs = rows.reverse(); // Yangi avval
+                localStorage.setItem('txsCache', JSON.stringify(txs)); // Cache ga saqlaymiz
                 renderMain();
             } catch (e) {
-                console.error("❌ load xatosi:", e.message);
+                console.error("❌ Sheets yuklanmadi:", e.message);
+                if (txs.length === 0) {
+                    console.warn("⚠️ Ma'lumot yo'q — cache ham bo'sh");
+                } else {
+                    console.log("ℹ️ Cache dagi ma'lumot ko'rsatilmoqda");
+                }
             }
         }
 
@@ -1915,6 +1944,7 @@
                 date: dateStr
             };
             txs.unshift(newTx); renderMain();
+            localStorage.setItem('txsCache', JSON.stringify(txs));
             document.getElementById('f-combined').value = '';
             document.getElementById('f-preview').textContent = '';
             await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(newTx) });
@@ -1925,6 +1955,7 @@
             if (!confirm("Ушбу харажат ўчирилсинми?")) return;
             txs = txs.filter(t => !(t.name === name && t.amt == amt));
             renderMain();
+            localStorage.setItem('txsCache', JSON.stringify(txs));
             await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', name, amt }) });
             setTimeout(load, 1000);
         }
@@ -1989,6 +2020,7 @@
             document.getElementById('edit-modal').classList.remove('show');
             editIndex = -1;
             renderMain();
+            localStorage.setItem('txsCache', JSON.stringify(txs));
 
             // Sync to Google Sheets: delete old, add new
             await fetch(GOOGLE_SHEET_URL, {
@@ -2551,8 +2583,6 @@
         </div>
     `;
         }
-
-
         pinInit();
         load();
     </script>
