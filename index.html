@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <meta name="application-name" content="X Rasxod">
     <meta name="description" content="Shaxsiy xarajatlar hisobi">
     <meta name="theme-color" content="#0a84ff">
@@ -19,843 +21,1705 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #000000; --card-bg: #1c1c1e; --ios-blur: rgba(28, 28, 30, 0.8);
-            --accent: #0a84ff; --red: #ff453a; --green: #32d74b; --orange: #ff9f0a;
-            --gray: #8e8e93; --text: #ffffff;
+            --bg: #000000;
+            --card-bg: #1c1c1e;
+            --ios-blur: rgba(28, 28, 30, 0.8);
+            --accent: #0a84ff;
+            --red: #ff453a;
+            --green: #32d74b;
+            --orange: #ff9f0a;
+            --gray: #8e8e93;
+            --text: #ffffff;
         }
 
         body {
-            background-color: var(--bg); color: var(--text);
+            background-color: var(--bg);
+            color: var(--text);
             font-family: -apple-system, system-ui, sans-serif;
-            margin: 0; padding: 0 0 100px 0; overflow-x: hidden;
+            margin: 0;
+            padding: 0 0 100px 0;
+            overflow-x: hidden;
         }
 
-        .header { padding: 10px 20px 10px; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 100; }
-        h1 { font-size: 32px; margin: 0; font-weight: 700; }
+        .header {
+            padding: 10px 20px 10px;
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 0;
+            font-weight: 700;
+        }
 
         .main-card {
             background: linear-gradient(145deg, #1c1c1e, #2c2c2e);
-            margin: 16px; padding: 24px; border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.05); text-align: center;
+            margin: 16px;
+            padding: 24px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
         }
 
-        .limit-container { margin: 20px 0; text-align: left; }
-        .limit-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray); margin-bottom: 8px; }
-        .progress-bg { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .limit-container {
+            margin: 20px 0;
+            text-align: left;
+        }
 
-        .total-amount { font-size: 38px; font-weight: 800; margin: 5px 0; }
+        .limit-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .progress-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .total-amount {
+            font-size: 38px;
+            font-weight: 800;
+            margin: 5px 0;
+        }
 
         /* Payment type selector */
-        .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .type-btn {
-            flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05); color: var(--gray); font-weight: 600; cursor: pointer;
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+            font-weight: 600;
+            cursor: pointer;
             font-size: 14px;
         }
-        .type-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .type-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
 
         /* Category selector */
-        .cat-label { font-size: 12px; color: var(--gray); text-align: left; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .cat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-align: left;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
         .cat-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 8px; margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
         }
+
         .cat-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            padding: 10px 4px; border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 4px;
+            border-radius: 14px;
             border: 1.5px solid transparent;
-            background: rgba(255,255,255,0.05);
-            cursor: pointer; transition: all 0.2s;
-        }
-        .cat-btn .cat-icon { font-size: 22px; line-height: 1; }
-        .cat-btn .cat-name { font-size: 10px; color: var(--gray); font-weight: 500; }
-        .cat-btn.active .cat-name { color: #fff; }
-
-        .cat-btn[data-cat="Oziq-ovqat"].active  { background: rgba(255,159,10,0.2);  border-color: #ff9f0a; }
-        .cat-btn[data-cat="Transport"].active    { background: rgba(10,132,255,0.2);  border-color: #0a84ff; }
-        .cat-btn[data-cat="Uy"].active           { background: rgba(50,215,75,0.2);   border-color: #32d74b; }
-        .cat-btn[data-cat="Sogliq"].active      { background: rgba(255,69,58,0.2);   border-color: #ff453a; }
-        .cat-btn[data-cat="Boshqa"].active       { background: rgba(142,142,147,0.2); border-color: #8e8e93; }
-
-        /* Kim uchun selector */
-        .for-selector { display: flex; gap: 8px; margin-bottom: 15px; }
-        .for-btn {
-            flex: 1; padding: 11px 8px; border-radius: 12px;
-            border: 1.5px solid transparent;
-            background: rgba(255,255,255,0.05); color: var(--gray);
-            font-weight: 600; font-size: 13px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
             transition: all 0.2s;
         }
-        .for-btn[data-for="Ўзим"].active  { background: rgba(100,210,255,0.18); border-color: #64d2ff; color: #64d2ff; }
-        .for-btn[data-for="Уй"].active    { background: rgba(255,214,10,0.18);  border-color: #ffd60a; color: #ffd60a; }
-        .for-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+        .cat-btn .cat-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .cat-btn .cat-name {
+            font-size: 10px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .cat-btn.active .cat-name {
+            color: #fff;
+        }
+
+
+
+        /* Kim uchun selector */
+        .for-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .for-btn {
+            flex: 1;
+            padding: 11px 8px;
+            border-radius: 12px;
+            border: 1.5px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .for-btn[data-for="Ўзим"].active {
+            background: rgba(100, 210, 255, 0.18);
+            border-color: #64d2ff;
+            color: #64d2ff;
+        }
+
+        .for-btn[data-for="Уй"].active {
+            background: rgba(255, 214, 10, 0.18);
+            border-color: #ffd60a;
+            color: #ffd60a;
+        }
+
+        .for-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
 
         input {
-            background: rgba(255,255,255,0.08); border: none; border-radius: 14px;
-            color: #fff; padding: 15px; width: 100%; margin-bottom: 12px; font-size: 16px; box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            padding: 15px;
+            width: 100%;
+            margin-bottom: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
 
         .save-btn {
-            background: var(--accent); color: #fff; border: none; border-radius: 14px;
-            padding: 16px; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            width: 100%;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
         }
 
         /* Filter buttons */
-        .filter-row { display: flex; gap: 8px; margin: 15px 16px; overflow-x: auto; padding-bottom: 2px; }
-        .filter-row::-webkit-scrollbar { display: none; }
-        .filter-btn {
-            flex-shrink: 0; background: var(--card-bg); border: none; color: var(--gray);
-            padding: 9px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; white-space: nowrap;
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            margin: 15px 16px;
+            overflow-x: auto;
+            padding-bottom: 2px;
         }
-        .filter-btn.active { background: #3a3a3c; color: white; }
+
+        .filter-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border: none;
+            color: var(--gray);
+            padding: 9px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background: #3a3a3c;
+            color: white;
+        }
 
         /* Category dot badge */
         .cat-dot {
-            display: inline-block; width: 8px; height: 8px;
-            border-radius: 50%; margin-right: 5px; flex-shrink: 0;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+            flex-shrink: 0;
         }
 
-        .history-list { margin: 10px 16px; background: var(--card-bg); border-radius: 24px; overflow: hidden; }
+        .history-list {
+            margin: 10px 16px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
         .list-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 16px; border-bottom: 0.5px solid rgba(255,255,255,0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
         }
-        .list-item:last-child { border-bottom: none; }
-        .item-left { display: flex; align-items: center; gap: 12px; }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .item-icon-wrap {
-            width: 38px; height: 38px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
         }
-        .item-info { display: flex; flex-direction: column; }
-        .item-name { font-weight: 600; font-size: 15px; }
-        .item-meta { font-size: 11px; color: var(--gray); margin-top: 2px; }
-        .type-badge { font-size: 10px; padding: 1px 5px; border-radius: 4px; background: rgba(255,255,255,0.08); color: var(--gray); margin-left: 4px; }
-        .delete-btn { background: none; border: none; color: var(--red); font-size: 18px; padding: 6px; opacity: 0.5; cursor: pointer; }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .item-meta {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .type-badge {
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--gray);
+            margin-left: 4px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 18px;
+            padding: 6px;
+            opacity: 0.5;
+            cursor: pointer;
+        }
 
         /* Category mini stats */
-        .cat-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin: 0 16px 6px; }
+        .cat-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 0 16px 6px;
+        }
+
         .cat-stat-item {
-            background: var(--card-bg); border-radius: 14px; padding: 10px 6px;
-            text-align: center; cursor: pointer; border: 1.5px solid transparent;
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            border: 1.5px solid transparent;
             transition: border-color 0.2s;
         }
-        .cat-stat-item.active { border-color: rgba(255,255,255,0.3); }
-        .cat-stat-icon { font-size: 18px; }
-        .cat-stat-amt { font-size: 10px; color: var(--gray); margin-top: 3px; word-break: break-all; }
+
+        .cat-stat-item.active {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .cat-stat-icon {
+            font-size: 18px;
+        }
+
+        .cat-stat-amt {
+            font-size: 10px;
+            color: var(--gray);
+            margin-top: 3px;
+            word-break: break-all;
+        }
 
         /* Tab bar */
         .tab-bar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--ios-blur); backdrop-filter: blur(25px);
-            display: flex; padding: 12px 0 env(safe-area-inset-bottom);
-            border-top: 0.5px solid rgba(255,255,255,0.1); z-index: 1000;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--ios-blur);
+            backdrop-filter: blur(25px);
+            display: flex;
+            padding: 12px 0 env(safe-area-inset-bottom);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
         }
-        .tab-item { flex: 1; text-align: center; color: var(--gray); font-size: 10px; cursor: pointer; }
-        .tab-item.active { color: var(--accent); }
-        .tab-icon { font-size: 22px; margin-bottom: 4px; }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            color: var(--gray);
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .tab-item.active {
+            color: var(--accent);
+        }
+
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
 
         /* Install Banner */
         #install-banner {
-            display: none; position: fixed; bottom: 80px; left: 16px; right: 16px;
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
             background: linear-gradient(135deg, #1c1c1e, #2c2c2e);
-            border: 1px solid rgba(10,132,255,0.4); border-radius: 20px; padding: 16px;
-            z-index: 999; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 1px solid rgba(10, 132, 255, 0.4);
+            border-radius: 20px;
+            padding: 16px;
+            z-index: 999;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.3s ease;
         }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        #install-banner.show { display: flex; align-items: center; gap: 12px; }
-        .install-icon { width: 48px; height: 48px; border-radius: 12px; }
-        .install-text { flex: 1; }
-        .install-text b { display: block; font-size: 14px; }
-        .install-text span { font-size: 12px; color: var(--gray); }
-        .install-btn { background: var(--accent); color: white; border: none; border-radius: 10px; padding: 8px 16px; font-weight: 600; font-size: 13px; cursor: pointer; }
-        .install-close { background: none; border: none; color: var(--gray); font-size: 18px; cursor: pointer; padding: 4px; }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #install-banner.show {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .install-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+        }
+
+        .install-text {
+            flex: 1;
+        }
+
+        .install-text b {
+            display: block;
+            font-size: 14px;
+        }
+
+        .install-text span {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .install-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .install-close {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
 
         /* Legend in chart page */
-        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 16px; }
-        .legend-item {
-            background: var(--card-bg); border-radius: 14px; padding: 12px;
-            display: flex; align-items: center; gap: 10px;
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 16px;
         }
-        .legend-color { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .legend-info { display: flex; flex-direction: column; }
-        .legend-name { font-size: 13px; font-weight: 500; }
-        .legend-pct { font-size: 11px; color: var(--gray); }
+
+        .legend-item {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .legend-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .legend-pct {
+            font-size: 11px;
+            color: var(--gray);
+        }
 
         /* Edit Modal (bottom sheet) */
         .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6); z-index: 2000;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
             backdrop-filter: blur(4px);
             animation: fadeIn 0.2s ease;
         }
-        .modal-overlay.show { display: flex; align-items: flex-end; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
 
         .modal-sheet {
-            width: 100%; background: #1c1c1e;
+            width: 100%;
+            background: #1c1c1e;
             border-radius: 28px 28px 0 0;
             padding: 12px 20px 40px;
-            animation: slideUp 0.28s cubic-bezier(0.34,1.56,0.64,1);
+            animation: slideUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
         .modal-handle {
-            width: 36px; height: 4px; border-radius: 2px;
-            background: rgba(255,255,255,0.2); margin: 0 auto 20px;
+            width: 36px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 auto 20px;
         }
+
         .modal-title {
-            font-size: 18px; font-weight: 700; margin-bottom: 18px; text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-align: center;
         }
+
         .modal-label {
-            font-size: 12px; color: var(--gray); margin-bottom: 6px;
-            letter-spacing: 0.5px; text-align: left;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-align: left;
         }
+
         .modal-input {
-            background: rgba(255,255,255,0.08); border: none; border-radius: 14px;
-            color: #fff; padding: 14px 15px; width: 100%;
-            margin-bottom: 14px; font-size: 16px; box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            padding: 14px 15px;
+            width: 100%;
+            margin-bottom: 14px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
-        .modal-input:focus { outline: 2px solid var(--accent); }
-        .modal-btns { display: flex; gap: 10px; margin-top: 6px; }
+
+        .modal-input:focus {
+            outline: 2px solid var(--accent);
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
         .modal-cancel {
-            flex: 1; padding: 15px; border-radius: 14px; border: none;
-            background: rgba(255,255,255,0.08); color: var(--gray);
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            flex: 1;
+            padding: 15px;
+            border-radius: 14px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--gray);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
         }
+
         .modal-save {
-            flex: 2; padding: 15px; border-radius: 14px; border: none;
-            background: var(--accent); color: #fff;
-            font-size: 15px; font-weight: 700; cursor: pointer;
+            flex: 2;
+            padding: 15px;
+            border-radius: 14px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
         }
+
         .edit-btn {
-            background: none; border: none; color: var(--accent);
-            font-size: 16px; padding: 6px; opacity: 0.7; cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 16px;
+            padding: 6px;
+            opacity: 0.7;
+            cursor: pointer;
         }
 
         /* Export modal */
-        #export-modal .modal-sheet { padding-bottom: 50px; }
-        .export-option {
-            display: flex; align-items: center; gap: 14px;
-            padding: 16px; border-radius: 16px; margin-bottom: 10px;
-            background: rgba(255,255,255,0.05); border: 1.5px solid transparent;
-            cursor: pointer; transition: all 0.15s;
+        #export-modal .modal-sheet {
+            padding-bottom: 50px;
         }
-        .export-option:active { transform: scale(0.98); }
-        .export-option-icon { font-size: 28px; line-height: 1; }
-        .export-option-info { flex: 1; text-align: left; }
-        .export-option-title { font-size: 15px; font-weight: 600; }
-        .export-option-desc { font-size: 12px; color: var(--gray); margin-top: 2px; }
-        .export-option-arrow { font-size: 18px; color: var(--gray); }
-        .export-option.csv  { border-color: rgba(50,215,75,0.4); }
-        .export-option.full { border-color: rgba(10,132,255,0.4); }
-        .export-option.month { border-color: rgba(255,159,10,0.4); }
+
+        .export-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .export-option:active {
+            transform: scale(0.98);
+        }
+
+        .export-option-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .export-option-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .export-option-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .export-option-desc {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .export-option-arrow {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .export-option.csv {
+            border-color: rgba(50, 215, 75, 0.4);
+        }
+
+        .export-option.full {
+            border-color: rgba(10, 132, 255, 0.4);
+        }
+
+        .export-option.month {
+            border-color: rgba(255, 159, 10, 0.4);
+        }
+
         .export-icon-btn {
-            background: none; border: none; color: var(--gray);
-            font-size: 20px; padding: 6px; cursor: pointer; opacity: 0.8;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 20px;
+            padding: 6px;
+            cursor: pointer;
+            opacity: 0.8;
         }
 
         /* Alert notification */
         .alert-toast {
-            position: fixed; top: 60px; left: 16px; right: 16px;
-            border-radius: 18px; padding: 16px 20px; z-index: 3000;
-            display: flex; align-items: center; gap: 12px;
-            animation: slideDown 0.3s ease; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.08);
+            position: fixed;
+            top: 60px;
+            left: 16px;
+            right: 16px;
+            border-radius: 18px;
+            padding: 16px 20px;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        @keyframes slideDown { from { transform:translateY(-20px);opacity:0; } to { transform:translateY(0);opacity:1; } }
-        .alert-toast.warn  { background: linear-gradient(135deg,#2d1f00,#3d2a00); border-color:rgba(255,159,10,0.4); }
-        .alert-toast.danger{ background: linear-gradient(135deg,#2d0000,#3d0000); border-color:rgba(255,69,58,0.4); }
-        .alert-toast-icon  { font-size: 26px; }
-        .alert-toast-text b{ display:block; font-size:14px; margin-bottom:3px; }
-        .alert-toast-text span{ font-size:12px; color:var(--gray); }
-        .alert-toast-close { margin-left:auto; background:none; border:none; color:var(--gray); font-size:20px; cursor:pointer; padding:0; }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-toast.warn {
+            background: linear-gradient(135deg, #2d1f00, #3d2a00);
+            border-color: rgba(255, 159, 10, 0.4);
+        }
+
+        .alert-toast.danger {
+            background: linear-gradient(135deg, #2d0000, #3d0000);
+            border-color: rgba(255, 69, 58, 0.4);
+        }
+
+        .alert-toast-icon {
+            font-size: 26px;
+        }
+
+        .alert-toast-text b {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .alert-toast-text span {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .alert-toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+        }
 
         /* For balance cards */
-        .for-balance-row { display:flex; gap:10px; margin:10px 16px 14px; }
-        .for-balance-card {
-            flex:1; background:var(--card-bg); border-radius:18px;
-            padding:16px 18px; border:1px solid rgba(255,255,255,0.08);
-            display:flex; flex-direction:column;
+        .for-balance-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 16px 14px;
         }
-        .for-balance-label { font-size:11px; color:var(--gray); margin-bottom:6px; letter-spacing:0.5px; }
-        .for-balance-amount { font-size:22px; font-weight:800; line-height:1.1; }
-        .for-balance-sub { font-size:11px; color:var(--gray); margin-top:5px; }
+
+        .for-balance-card {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 16px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .for-balance-label {
+            font-size: 11px;
+            color: var(--gray);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .for-balance-amount {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .for-balance-sub {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
 
         /* Compare section in chart page */
-        .compare-row { display:flex; gap:8px; margin:0 16px 12px; flex-wrap:wrap; }
+        .compare-row {
+            display: flex;
+            gap: 8px;
+            margin: 0 16px 12px;
+            flex-wrap: wrap;
+        }
+
         .compare-select {
-            flex:1; min-width:100px; background:var(--card-bg); border:1px solid rgba(255,255,255,0.1);
-            color:#fff; border-radius:12px; padding:9px 12px; font-size:13px; cursor:pointer;
+            flex: 1;
+            min-width: 100px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 13px;
+            cursor: pointer;
         }
+
         .compare-card {
-            background:var(--card-bg); border-radius:20px; margin:0 16px 10px;
-            overflow:hidden;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin: 0 16px 10px;
+            overflow: hidden;
         }
+
         .compare-item {
-            display:flex; align-items:center; padding:13px 16px;
-            border-bottom:0.5px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            padding: 13px 16px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
         }
-        .compare-item:last-child { border-bottom:none; }
-        .compare-name { flex:1; font-size:14px; }
-        .compare-vals { display:flex; flex-direction:column; align-items:flex-end; gap:2px; }
-        .compare-m1 { font-size:13px; font-weight:600; }
-        .compare-m2 { font-size:11px; color:var(--gray); }
-        .compare-diff { font-size:12px; font-weight:600; min-width:50px; text-align:right; }
+
+        .compare-item:last-child {
+            border-bottom: none;
+        }
+
+        .compare-name {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .compare-vals {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .compare-m1 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .compare-m2 {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .compare-diff {
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
 
         /* Trend chart */
-        .trend-card { background:var(--card-bg); border-radius:20px; margin:0 16px 10px; padding:16px; height:180px; }
+        .trend-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin: 0 16px 10px;
+            padding: 16px;
+            height: 180px;
+        }
 
         /* Limit modal input */
-        .limit-edit-row { display:flex; align-items:center; gap:8px; cursor:pointer; }
-        .limit-edit-icon { font-size:14px; color:var(--accent); }
+        .limit-edit-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .limit-edit-icon {
+            font-size: 14px;
+            color: var(--accent);
+        }
 
         /* PIN Screen */
         #pin-screen {
-            position: fixed; inset: 0; z-index: 9999;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
             background: #000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 0;
         }
-        #pin-screen.hidden { display: none; }
-        .pin-logo { font-size: 48px; margin-bottom: 12px; }
-        .pin-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-        .pin-subtitle { font-size: 13px; color: #8e8e93; margin-bottom: 36px; }
-        .pin-dots { display: flex; gap: 16px; margin-bottom: 40px; }
+
+        #pin-screen.hidden {
+            display: none;
+        }
+
+        .pin-logo {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .pin-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .pin-subtitle {
+            font-size: 13px;
+            color: #8e8e93;
+            margin-bottom: 36px;
+        }
+
+        .pin-dots {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
         .pin-dot {
-            width: 14px; height: 14px; border-radius: 50%;
-            border: 2px solid #8e8e93; background: transparent;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #8e8e93;
+            background: transparent;
             transition: all 0.15s;
         }
-        .pin-dot.filled { background: #0a84ff; border-color: #0a84ff; }
-        .pin-dot.error  { background: #ff453a; border-color: #ff453a; }
-        .pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px; }
-        .pin-key {
-            width: 72px; height: 72px; border-radius: 50%;
-            background: #1c1c1e; border: none; color: #fff;
-            font-size: 22px; font-weight: 500; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: background 0.1s; gap: 0;
+
+        .pin-dot.filled {
+            background: #0a84ff;
+            border-color: #0a84ff;
         }
-        .pin-key:active { background: #3a3a3c; }
-        .pin-key .pin-sub { font-size: 9px; color: #8e8e93; letter-spacing: 1px; margin-top: 1px; }
-        .pin-key.del { background: transparent; font-size: 20px; }
-        .pin-key.empty { background: transparent; cursor: default; }
-        .pin-forgot { margin-top: 28px; font-size: 13px; color: #0a84ff; cursor: pointer; }
+
+        .pin-dot.error {
+            background: #ff453a;
+            border-color: #ff453a;
+        }
+
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 72px);
+            gap: 14px;
+        }
+
+        .pin-key {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #1c1c1e;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.1s;
+            gap: 0;
+        }
+
+        .pin-key:active {
+            background: #3a3a3c;
+        }
+
+        .pin-key .pin-sub {
+            font-size: 9px;
+            color: #8e8e93;
+            letter-spacing: 1px;
+            margin-top: 1px;
+        }
+
+        .pin-key.del {
+            background: transparent;
+            font-size: 20px;
+        }
+
+        .pin-key.empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        .pin-forgot {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #0a84ff;
+            cursor: pointer;
+        }
 
         /* Prognoz card */
         .prognoz-card {
-            margin: 0 16px 10px; background: var(--card-bg);
-            border-radius: 20px; padding: 16px 18px;
-            border: 1px solid rgba(255,255,255,0.07);
+            margin: 0 16px 10px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 16px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
         }
-        .prognoz-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .prognoz-label { font-size: 12px; color: var(--gray); letter-spacing: 0.5px; }
-        .prognoz-val { font-size: 17px; font-weight: 700; }
-        .prognoz-bar-bg { background: rgba(255,255,255,0.08); height: 5px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
-        .prognoz-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
-        .prognoz-warn { font-size: 12px; margin-top: 10px; padding: 8px 12px; border-radius: 10px; }
+
+        .prognoz-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .prognoz-label {
+            font-size: 12px;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+        }
+
+        .prognoz-val {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .prognoz-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
+            height: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .prognoz-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .prognoz-warn {
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
 
         /* Income */
         .income-card {
-            margin: 0 16px 10px; background: linear-gradient(135deg,#0d2d1a,#0a3d1f);
-            border-radius: 20px; padding: 16px 18px;
-            border: 1px solid rgba(50,215,75,0.25);
+            margin: 0 16px 10px;
+            background: linear-gradient(135deg, #0d2d1a, #0a3d1f);
+            border-radius: 20px;
+            padding: 16px 18px;
+            border: 1px solid rgba(50, 215, 75, 0.25);
         }
-        .income-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-        .income-label { font-size:12px; color:#32d74b; letter-spacing:0.5px; font-weight:600; }
-        .income-toggle { font-size:12px; color:var(--gray); cursor:pointer; }
-        .income-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-        .income-amount { font-size:24px; font-weight:800; color:#32d74b; }
-        .income-balance { font-size:13px; }
-        .income-balance.positive { color:#32d74b; }
-        .income-balance.negative { color:#ff453a; }
-        .income-input-row { display:flex; gap:8px; margin-top:12px; }
+
+        .income-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .income-label {
+            font-size: 12px;
+            color: #32d74b;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .income-toggle {
+            font-size: 12px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .income-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .income-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: #32d74b;
+        }
+
+        .income-balance {
+            font-size: 13px;
+        }
+
+        .income-balance.positive {
+            color: #32d74b;
+        }
+
+        .income-balance.negative {
+            color: #ff453a;
+        }
+
+        .income-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
         .income-input {
-            flex:1; background:rgba(255,255,255,0.08); border:none; border-radius:12px;
-            color:#fff; padding:12px 14px; font-size:15px;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            padding: 12px 14px;
+            font-size: 15px;
         }
+
         .income-add-btn {
-            background:#32d74b; color:#000; border:none; border-radius:12px;
-            padding:12px 18px; font-weight:700; font-size:15px; cursor:pointer; white-space:nowrap;
+            background: #32d74b;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            white-space: nowrap;
         }
-        .income-history { margin-top:10px; }
+
+        .income-history {
+            margin-top: 10px;
+        }
+
         .income-item {
-            display:flex; justify-content:space-between; align-items:center;
-            padding:10px 0; border-bottom:0.5px solid rgba(255,255,255,0.07); font-size:13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
+            font-size: 13px;
         }
-        .income-item:last-child { border-bottom:none; }
-        .income-del { background:none; border:none; color:#ff453a; font-size:14px; cursor:pointer; opacity:0.5; }
+
+        .income-item:last-child {
+            border-bottom: none;
+        }
+
+        .income-del {
+            background: none;
+            border: none;
+            color: #ff453a;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.5;
+        }
     </style>
 </head>
+
 <body>
 
-<div id="install-banner">
-    <img src="icon-192.png" class="install-icon" alt="icon">
-    <div class="install-text">
-        <b>X Rasxod</b>
-        <span>Ilovani o'rnatish</span>
+    <div id="install-banner">
+        <img src="icon-192.png" class="install-icon" alt="icon">
+        <div class="install-text">
+            <b>X Rasxod</b>
+            <span>Ilovani o'rnatish</span>
+        </div>
+        <button class="install-btn" onclick="installPWA()">O'rnatish</button>
+        <button class="install-close" onclick="dismissBanner()">✕</button>
     </div>
-    <button class="install-btn" onclick="installPWA()">O'rnatish</button>
-    <button class="install-close" onclick="dismissBanner()">✕</button>
-</div>
 
-<!-- PIN SCREEN -->
-<div id="pin-screen">
-    <div class="pin-logo">🔐</div>
-    <div class="pin-title">X Rasxod</div>
-    <div class="pin-subtitle" id="pin-subtitle">PIN кодни киритинг</div>
-    <div class="pin-dots" id="pin-dots">
-        <div class="pin-dot" id="pd0"></div>
-        <div class="pin-dot" id="pd1"></div>
-        <div class="pin-dot" id="pd2"></div>
-        <div class="pin-dot" id="pd3"></div>
+    <!-- PIN SCREEN -->
+    <div id="pin-screen">
+        <div class="pin-logo">🔐</div>
+        <div class="pin-title">X Rasxod</div>
+        <div class="pin-subtitle" id="pin-subtitle">PIN кодни киритинг</div>
+        <div class="pin-dots" id="pin-dots">
+            <div class="pin-dot" id="pd0"></div>
+            <div class="pin-dot" id="pd1"></div>
+            <div class="pin-dot" id="pd2"></div>
+            <div class="pin-dot" id="pd3"></div>
+        </div>
+        <div class="pin-keypad">
+            <button class="pin-key" onclick="pinPress('1')">1</button>
+            <button class="pin-key" onclick="pinPress('2')">2<div class="pin-sub">ABC</div></button>
+            <button class="pin-key" onclick="pinPress('3')">3<div class="pin-sub">DEF</div></button>
+            <button class="pin-key" onclick="pinPress('4')">4<div class="pin-sub">GHI</div></button>
+            <button class="pin-key" onclick="pinPress('5')">5<div class="pin-sub">JKL</div></button>
+            <button class="pin-key" onclick="pinPress('6')">6<div class="pin-sub">MNO</div></button>
+            <button class="pin-key" onclick="pinPress('7')">7<div class="pin-sub">PQRS</div></button>
+            <button class="pin-key" onclick="pinPress('8')">8<div class="pin-sub">TUV</div></button>
+            <button class="pin-key" onclick="pinPress('9')">9<div class="pin-sub">WXYZ</div></button>
+            <button class="pin-key empty"></button>
+            <button class="pin-key" onclick="pinPress('0')">0</button>
+            <button class="pin-key del" onclick="pinDel()">⌫</button>
+        </div>
+        <div class="pin-forgot" id="pin-forgot-btn" onclick="pinForgot()">PIN кодни унутдим</div>
     </div>
-    <div class="pin-keypad">
-        <button class="pin-key" onclick="pinPress('1')">1</button>
-        <button class="pin-key" onclick="pinPress('2')">2<div class="pin-sub">ABC</div></button>
-        <button class="pin-key" onclick="pinPress('3')">3<div class="pin-sub">DEF</div></button>
-        <button class="pin-key" onclick="pinPress('4')">4<div class="pin-sub">GHI</div></button>
-        <button class="pin-key" onclick="pinPress('5')">5<div class="pin-sub">JKL</div></button>
-        <button class="pin-key" onclick="pinPress('6')">6<div class="pin-sub">MNO</div></button>
-        <button class="pin-key" onclick="pinPress('7')">7<div class="pin-sub">PQRS</div></button>
-        <button class="pin-key" onclick="pinPress('8')">8<div class="pin-sub">TUV</div></button>
-        <button class="pin-key" onclick="pinPress('9')">9<div class="pin-sub">WXYZ</div></button>
-        <button class="pin-key empty"></button>
-        <button class="pin-key" onclick="pinPress('0')">0</button>
-        <button class="pin-key del" onclick="pinDel()">⌫</button>
-    </div>
-    <div class="pin-forgot" id="pin-forgot-btn" onclick="pinForgot()">PIN кодни унутдим</div>
-</div>
 
-<!-- MAIN PAGE -->
-<div id="page-main">
-    <div class="header" style="display:flex;justify-content:space-between;align-items:flex-end;"><h1>Ҳисоб</h1><div style="display:flex;gap:4px;"><button class="export-icon-btn" onclick="openExportModal()" title="Eksport">📤</button><button class="export-icon-btn" onclick="openPinSettings()" title="PIN">🔑</button></div></div>
-
-    <div class="main-card">
-        <div style="color:var(--gray);font-size:12px;letter-spacing:1px;">ЖАМИ ХАРАЖАТ</div>
-        <div class="total-amount" id="total-val">0 сўм</div>
-
-        <div class="limit-container">
-            <div class="limit-info">
-                <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">5,000,000</b> <span class="limit-edit-icon">✎</span></span>
-                <span id="percent-text">0%</span>
-            </div>
-            <div class="progress-bg"><div id="progress-bar" class="progress-fill"></div></div>
+    <!-- MAIN PAGE -->
+    <div id="page-main">
+        <div class="header" style="display:flex;justify-content:space-between;align-items:flex-end;">
+            <h1>X Rasxod</h1>
+            <div style="display:flex;gap:4px;"><button class="export-icon-btn" onclick="openExportModal()"
+                    title="Eksport">📤</button><button class="export-icon-btn" onclick="openPinSettings()"
+                    title="PIN">🔑</button></div>
         </div>
 
-        <!-- Payment type -->
-        <div class="type-selector">
-            <div class="type-btn active" onclick="setType('Нақд',this)">💵 Нақд</div>
-            <div class="type-btn" onclick="setType('Карта',this)">💳 Карта</div>
+        <div class="main-card">
+            <div style="color:var(--gray);font-size:12px;letter-spacing:1px;">ЖАМИ ХАРАЖАТ</div>
+            <div class="total-amount" id="total-val">0 сўм</div>
+
+            <div class="limit-container">
+                <div class="limit-info">
+                    <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">5,000,000</b>
+                        <span class="limit-edit-icon">✎</span></span>
+                    <span id="percent-text">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div id="progress-bar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Payment type -->
+            <div class="type-selector">
+                <div class="type-btn active" onclick="setType('Нақд',this)">💵 Нақд</div>
+                <div class="type-btn" onclick="setType('Карта',this)">💳 Карта</div>
+            </div>
+
+            <!-- Category selector -->
+            <div class="cat-label">КАТЕГОРИЯ</div>
+            <div class="cat-grid" id="cat-selector"></div>
+
+            <div class="cat-label">КИМ УЧУН</div>
+            <div class="for-selector" id="for-selector">
+                <div class="for-btn active" data-for="Ўзим" onclick="setFor('Ўзим',this)">
+                    <div class="for-dot" style="background:#64d2ff"></div> 👤 Ўзим
+                </div>
+                <div class="for-btn" data-for="Уй" onclick="setFor('Уй',this)">
+                    <div class="for-dot" style="background:#ffd60a"></div> 🏡 Уй
+                </div>
+            </div>
+
+            <input type="text" id="f-combined" placeholder="Масалан: Макет 50000" oninput="parseCombined(this.value)"
+                onkeydown="if(event.key==='Enter') addTx()">
+            <div id="f-preview"
+                style="font-size:12px;color:var(--gray);text-align:left;margin:-6px 0 12px;min-height:16px;padding:0 4px;">
+            </div>
+            <button class="save-btn" onclick="addTx()">Қўшиш</button>
         </div>
 
-        <!-- Category selector -->
-        <div class="cat-label">КАТЕГОРИЯ</div>
-        <div class="cat-grid" id="cat-selector">
-            <div class="cat-btn active" data-cat="Oziq-ovqat" onclick="setCat('Oziq-ovqat',this)">
-                <span class="cat-icon">🛒</span><span class="cat-name">Oziq-Ovqat</span>
+        <!-- For balance -->
+        <div class="for-balance-row" id="for-balance"></div>
+
+        <!-- Income -->
+        <div class="income-card">
+            <div class="income-header">
+                <span class="income-label">💚 ДАРОМАД (ПРИХОД)</span>
+                <span class="income-toggle" onclick="toggleIncomeHistory()">Тарих ▾</span>
             </div>
-            <div class="cat-btn" data-cat="Transport" onclick="setCat('Transport',this)">
-                <span class="cat-icon">🚗</span><span class="cat-name">Transport</span>
+            <div class="income-row">
+                <div>
+                    <div class="income-amount" id="income-total">0 сўм</div>
+                    <div class="income-balance" id="income-balance"></div>
+                </div>
             </div>
-            <div class="cat-btn" data-cat="Uy" onclick="setCat('Uy',this)">
-                <span class="cat-icon">🏠</span><span class="cat-name">Uy</span>
+            <div class="income-input-row">
+                <input class="income-input" id="income-input" type="text" placeholder="Маош 3000000"
+                    onkeydown="if(event.key==='Enter') addIncome()">
+                <button class="income-add-btn" onclick="addIncome()">+ Қўш</button>
             </div>
-            <div class="cat-btn" data-cat="Sogliq" onclick="setCat('Sogliq',this)">
-                <span class="cat-icon">💊</span><span class="cat-name">Sog'liq</span>
-            </div>
-            <div class="cat-btn" data-cat="Boshqa" onclick="setCat('Boshqa',this)">
-                <span class="cat-icon">📦</span><span class="cat-name">Boshqa</span>
-            </div>
+            <div class="income-history" id="income-history" style="display:none;"></div>
         </div>
 
-        <div class="cat-label">КИМ УЧУН</div>
-        <div class="for-selector" id="for-selector">
-            <div class="for-btn active" data-for="Ўзим" onclick="setFor('Ўзим',this)">
-                <div class="for-dot" style="background:#64d2ff"></div> 👤 Ўзим
-            </div>
-            <div class="for-btn" data-for="Уй" onclick="setFor('Уй',this)">
-                <div class="for-dot" style="background:#ffd60a"></div> 🏡 Уй
-            </div>
+        <!-- Prognoz -->
+        <div class="prognoz-card" id="prognoz-card"></div>
+
+        <!-- Category mini stats -->
+        <div class="cat-stats" id="cat-stats"></div>
+
+        <div
+            style="margin:16px 20px 8px;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
+            <span>Охирги харажатлар</span>
+            <span style="font-size:12px;color:var(--gray);" id="filter-label">Барчаси</span>
         </div>
 
-        <input type="text" id="f-combined" placeholder="Масалан: Макет 50000" oninput="parseCombined(this.value)" onkeydown="if(event.key==='Enter') addTx()">
-        <div id="f-preview" style="font-size:12px;color:var(--gray);text-align:left;margin:-6px 0 12px;min-height:16px;padding:0 4px;"></div>
-        <button class="save-btn" onclick="addTx()">Қўшиш</button>
+        <!-- Filter by category -->
+        <div class="filter-row" id="cat-filter-row"></div>
+
+        <div id="list" class="history-list"></div>
     </div>
 
-    <!-- For balance -->
-    <div class="for-balance-row" id="for-balance"></div>
-
-    <!-- Income -->
-    <div class="income-card">
-        <div class="income-header">
-            <span class="income-label">💚 ДАРОМАД (ПРИХОД)</span>
-            <span class="income-toggle" onclick="toggleIncomeHistory()">Тарих ▾</span>
+    <!-- CHART PAGE -->
+    <div id="page-chart" style="display:none;">
+        <div class="header">
+            <h1>Таҳлил</h1>
         </div>
-        <div class="income-row">
-            <div>
-                <div class="income-amount" id="income-total">0 сўм</div>
-                <div class="income-balance" id="income-balance"></div>
+        <div class="filter-row">
+            <button class="filter-btn active" onclick="setFilter('day',this)">Бугун</button>
+            <button class="filter-btn" onclick="setFilter('week',this)">Ҳафта</button>
+            <button class="filter-btn" onclick="setFilter('month',this)">Ой</button>
+        </div>
+
+        <!-- Chart type toggle -->
+        <div style="display:flex;gap:8px;margin:0 16px 12px;">
+            <button class="filter-btn active" id="chart-by-name" onclick="setChartMode('name',this)">Нарх
+                бўйича</button>
+            <button class="filter-btn" id="chart-by-cat" onclick="setChartMode('cat',this)">Категория бўйича</button>
+        </div>
+
+        <div class="main-card" style="height:220px;">
+            <canvas id="myChart" style="height:100%;"></canvas>
+        </div>
+
+        <!-- Category legend -->
+        <div class="legend-grid" id="chart-legend"></div>
+        <div id="group-list" class="history-list"></div>
+
+        <!-- Trend -->
+        <div style="margin:20px 16px 8px;font-weight:600;font-size:16px;">📈 Кунлик тренд</div>
+        <div class="trend-card"><canvas id="trendChart"></canvas></div>
+
+        <!-- Compare months -->
+        <div style="margin:20px 16px 8px;font-weight:600;font-size:16px;">📅 Ойлар солиштириш</div>
+        <div class="compare-row">
+            <select class="compare-select" id="cmp-m1" onchange="renderCompare()"></select>
+            <select class="compare-select" id="cmp-m2" onchange="renderCompare()"></select>
+        </div>
+        <div class="compare-card" id="compare-result"></div>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab-item active" id="tab-main" onclick="showTab('main')">
+            <div class="tab-icon">🏠</div>Асосий
+        </div>
+        <div class="tab-item" id="tab-chart" onclick="showTab('chart')">
+            <div class="tab-icon">📊</div>Таҳлил
+        </div>
+    </div>
+
+    <!-- PIN SETTINGS MODAL -->
+    <div class="modal-overlay" id="pin-settings-modal" onclick="closePinSettings(event)">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title" id="pin-settings-title">🔑 PIN созламалари</div>
+            <div id="pin-settings-body">
+                <button class="save-btn" style="margin-bottom:12px;" onclick="startSetPin()">Янги PIN ўрнатиш</button>
+                <button class="modal-cancel" style="width:100%;" onclick="disablePin()">PIN ни ўчириш</button>
+            </div>
+            <button class="modal-cancel" style="width:100%;margin-top:10px;" onclick="closePinSettings()">Ёпиш</button>
+        </div>
+    </div>
+
+    <!-- LIMIT MODAL -->
+    <div class="modal-overlay" id="limit-modal" onclick="closeLimitModal(event)">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">✎ Лимитни ўзгартириш</div>
+            <div class="modal-label">ОЙЛИК ЛИМИТ (СЎМ)</div>
+            <input class="modal-input" id="limit-input" type="number" placeholder="5000000">
+            <div class="modal-btns">
+                <button class="modal-cancel" onclick="closeLimitModal()">Bekor</button>
+                <button class="modal-save" onclick="saveLimit()">Saqlash ✓</button>
             </div>
         </div>
-        <div class="income-input-row">
-            <input class="income-input" id="income-input" type="text" placeholder="Маош 3000000" onkeydown="if(event.key==='Enter') addIncome()">
-            <button class="income-add-btn" onclick="addIncome()">+ Қўш</button>
-        </div>
-        <div class="income-history" id="income-history" style="display:none;"></div>
     </div>
 
-    <!-- Prognoz -->
-    <div class="prognoz-card" id="prognoz-card"></div>
+    <!-- ADD CATEGORY MODAL -->
+    <div class="modal-overlay" id="add-cat-modal" onclick="closeAddCatModal(event)">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">✨ Yangi kategoriya</div>
 
-    <!-- Category mini stats -->
-    <div class="cat-stats" id="cat-stats"></div>
+            <div class="modal-label">KATEGORIYA NOMI</div>
+            <input class="modal-input" id="new-cat-name" type="text" placeholder="Masalan: Ta'lim">
 
-    <div style="margin:16px 20px 8px;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
-        <span>Охирги харажатлар</span>
-        <span style="font-size:12px;color:var(--gray);" id="filter-label">Барчаси</span>
-    </div>
+            <div class="modal-label">EMOJI (IKONKA)</div>
+            <input class="modal-input" id="new-cat-icon" type="text" placeholder="Masalan: 📚" maxlength="2">
 
-    <!-- Filter by category -->
-    <div class="filter-row" id="cat-filter-row">
-        <button class="filter-btn active" onclick="setCatFilter('all',this)">Барча</button>
-        <button class="filter-btn" onclick="setCatFilter('__uzim',this)">👤 Ўзим</button>
-        <button class="filter-btn" onclick="setCatFilter('__uy',this)">🏡 Уй</button>
-        <button class="filter-btn" onclick="setCatFilter('Oziq-ovqat',this)">🛒 Ovqat</button>
-        <button class="filter-btn" onclick="setCatFilter('Transport',this)">🚗 Transport</button>
-        <button class="filter-btn" onclick="setCatFilter('Uy',this)">🏠 Uy</button>
-        <button class="filter-btn" onclick="setCatFilter('Sogliq',this)">💊 Sog'liq</button>
-        <button class="filter-btn" onclick="setCatFilter('Boshqa',this)">📦 Boshqa</button>
-    </div>
-
-    <div id="list" class="history-list"></div>
-</div>
-
-<!-- CHART PAGE -->
-<div id="page-chart" style="display:none;">
-    <div class="header"><h1>Таҳлил</h1></div>
-    <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('day',this)">Бугун</button>
-        <button class="filter-btn" onclick="setFilter('week',this)">Ҳафта</button>
-        <button class="filter-btn" onclick="setFilter('month',this)">Ой</button>
-    </div>
-
-    <!-- Chart type toggle -->
-    <div style="display:flex;gap:8px;margin:0 16px 12px;">
-        <button class="filter-btn active" id="chart-by-name" onclick="setChartMode('name',this)">Нарх бўйича</button>
-        <button class="filter-btn" id="chart-by-cat" onclick="setChartMode('cat',this)">Категория бўйича</button>
-    </div>
-
-    <div class="main-card" style="height:220px;">
-        <canvas id="myChart" style="height:100%;"></canvas>
-    </div>
-
-    <!-- Category legend -->
-    <div class="legend-grid" id="chart-legend"></div>
-    <div id="group-list" class="history-list"></div>
-
-    <!-- Trend -->
-    <div style="margin:20px 16px 8px;font-weight:600;font-size:16px;">📈 Кунлик тренд</div>
-    <div class="trend-card"><canvas id="trendChart"></canvas></div>
-
-    <!-- Compare months -->
-    <div style="margin:20px 16px 8px;font-weight:600;font-size:16px;">📅 Ойлар солиштириш</div>
-    <div class="compare-row">
-        <select class="compare-select" id="cmp-m1" onchange="renderCompare()"></select>
-        <select class="compare-select" id="cmp-m2" onchange="renderCompare()"></select>
-    </div>
-    <div class="compare-card" id="compare-result"></div>
-</div>
-
-<div class="tab-bar">
-    <div class="tab-item active" id="tab-main" onclick="showTab('main')">
-        <div class="tab-icon">🏠</div>Асосий
-    </div>
-    <div class="tab-item" id="tab-chart" onclick="showTab('chart')">
-        <div class="tab-icon">📊</div>Таҳлил
-    </div>
-</div>
-
-<!-- PIN SETTINGS MODAL -->
-<div class="modal-overlay" id="pin-settings-modal" onclick="closePinSettings(event)">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-title" id="pin-settings-title">🔑 PIN созламалари</div>
-        <div id="pin-settings-body">
-            <button class="save-btn" style="margin-bottom:12px;" onclick="startSetPin()">Янги PIN ўрнатиш</button>
-            <button class="modal-cancel" style="width:100%;" onclick="disablePin()">PIN ни ўчириш</button>
-        </div>
-        <button class="modal-cancel" style="width:100%;margin-top:10px;" onclick="closePinSettings()">Ёпиш</button>
-    </div>
-</div>
-
-<!-- LIMIT MODAL -->
-<div class="modal-overlay" id="limit-modal" onclick="closeLimitModal(event)">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-title">✎ Лимитни ўзгартириш</div>
-        <div class="modal-label">ОЙЛИК ЛИМИТ (СЎМ)</div>
-        <input class="modal-input" id="limit-input" type="number" placeholder="5000000">
-        <div class="modal-btns">
-            <button class="modal-cancel" onclick="closeLimitModal()">Bekor</button>
-            <button class="modal-save" onclick="saveLimit()">Saqlash ✓</button>
-        </div>
-    </div>
-</div>
-
-<!-- EXPORT MODAL -->
-<div class="modal-overlay" id="export-modal" onclick="closeExportModal(event)">
-    <div class="modal-sheet" id="export-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-title">📤 Eksport</div>
-
-        <div class="export-option csv" onclick="exportCSV('all')">
-            <div class="export-option-icon">📋</div>
-            <div class="export-option-info">
-                <div class="export-option-title">Barcha ma'lumotlar</div>
-                <div class="export-option-desc">Barcha xarajatlar — CSV fayl</div>
+            <div class="modal-label">RANG (Ixtiyoriy)</div>
+            <div style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;" id="new-cat-colors">
+                <div class="color-picker-btn active" data-color="#ff453a" style="background:#ff453a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid #fff;"></div>
+                <div class="color-picker-btn" data-color="#ff9f0a" style="background:#ff9f0a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn" data-color="#ffd60a" style="background:#ffd60a; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn" data-color="#32d74b" style="background:#32d74b; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn" data-color="#64d2ff" style="background:#64d2ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn" data-color="#0a84ff" style="background:#0a84ff; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
+                <div class="color-picker-btn" data-color="#bf5af2" style="background:#bf5af2; width:30px; height:30px; border-radius:50%; cursor:pointer; border: 2px solid transparent;"></div>
             </div>
-            <div class="export-option-arrow">›</div>
-        </div>
 
-        <div class="export-option month" onclick="exportCSV('month')">
-            <div class="export-option-icon">📅</div>
-            <div class="export-option-info">
-                <div class="export-option-title">Joriy oy</div>
-                <div class="export-option-desc" id="export-month-label">Shu oy xarajatlari</div>
-            </div>
-            <div class="export-option-arrow">›</div>
-        </div>
-
-        <div class="export-option full" onclick="exportCSV('cat')">
-            <div class="export-option-icon">📊</div>
-            <div class="export-option-info">
-                <div class="export-option-title">Kategoriya hisoboti</div>
-                <div class="export-option-desc">Har bir kategoriya bo'yicha jami</div>
-            </div>
-            <div class="export-option-arrow">›</div>
-        </div>
-
-        <button class="modal-cancel" style="width:100%;margin-top:6px;" onclick="closeExportModal()">Yopish</button>
-    </div>
-</div>
-
-<!-- EDIT MODAL -->
-<div class="modal-overlay" id="edit-modal" onclick="closeEditModal(event)">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-title">✏️ Tahrirlash</div>
-
-        <div class="modal-label">NOM</div>
-        <input class="modal-input" id="edit-name" type="text" placeholder="Nima sotib oldingiz?">
-
-        <div class="modal-label">SUMMA</div>
-        <input class="modal-input" id="edit-amt" type="number" placeholder="Summa">
-
-        <div class="modal-label">TO'LOV TURI</div>
-        <div class="type-selector" style="margin-bottom:14px;">
-            <div class="type-btn active" id="edit-type-naqd" onclick="setEditType('Нақд',this)">💵 Нақд</div>
-            <div class="type-btn" id="edit-type-karta" onclick="setEditType('Карта',this)">💳 Карта</div>
-        </div>
-
-        <div class="modal-label">KATEGORIYA</div>
-        <div class="cat-grid" id="edit-cat-selector" style="margin-bottom:18px;">
-            <div class="cat-btn active" data-cat="Oziq-ovqat" onclick="setEditCat('Oziq-ovqat',this)">
-                <span class="cat-icon">🛒</span><span class="cat-name">Ovqat</span>
-            </div>
-            <div class="cat-btn" data-cat="Transport" onclick="setEditCat('Transport',this)">
-                <span class="cat-icon">🚗</span><span class="cat-name">Transport</span>
-            </div>
-            <div class="cat-btn" data-cat="Uy" onclick="setEditCat('Uy',this)">
-                <span class="cat-icon">🏠</span><span class="cat-name">Uy</span>
-            </div>
-            <div class="cat-btn" data-cat="Sogliq" onclick="setEditCat('Sogliq',this)">
-                <span class="cat-icon">💊</span><span class="cat-name">Sog'liq</span>
-            </div>
-            <div class="cat-btn" data-cat="Boshqa" onclick="setEditCat('Boshqa',this)">
-                <span class="cat-icon">📦</span><span class="cat-name">Boshqa</span>
+            <div class="modal-btns">
+                <button class="modal-cancel" onclick="closeAddCatModal()">Bekor</button>
+                <button class="modal-save" onclick="saveNewCat()">Saqlash ✓</button>
             </div>
         </div>
+    </div>
 
-        <div class="modal-label">КИМ УЧУН</div>
-        <div class="for-selector" id="edit-for-selector" style="margin-bottom:18px;">
-            <div class="for-btn active" data-for="Ўзим" onclick="setEditFor('Ўзим',this)">
-                <div class="for-dot" style="background:#64d2ff"></div> 👤 Ўзим
-            </div>
-            <div class="for-btn" data-for="Уй" onclick="setEditFor('Уй',this)">
-                <div class="for-dot" style="background:#ffd60a"></div> 🏡 Уй
-            </div>
-        </div>
+    <!-- EXPORT MODAL -->
+    <div class="modal-overlay" id="export-modal" onclick="closeExportModal(event)">
+        <div class="modal-sheet" id="export-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">📤 Eksport</div>
 
-        <div class="modal-btns">
-            <button class="modal-cancel" onclick="closeEditModal()">Bekor</button>
-            <button class="modal-save" onclick="saveEdit()">Saqlash ✓</button>
+            <div class="export-option csv" onclick="exportCSV('all')">
+                <div class="export-option-icon">📋</div>
+                <div class="export-option-info">
+                    <div class="export-option-title">Barcha ma'lumotlar</div>
+                    <div class="export-option-desc">Barcha xarajatlar — CSV fayl</div>
+                </div>
+                <div class="export-option-arrow">›</div>
+            </div>
+
+            <div class="export-option month" onclick="exportCSV('month')">
+                <div class="export-option-icon">📅</div>
+                <div class="export-option-info">
+                    <div class="export-option-title">Joriy oy</div>
+                    <div class="export-option-desc" id="export-month-label">Shu oy xarajatlari</div>
+                </div>
+                <div class="export-option-arrow">›</div>
+            </div>
+
+            <div class="export-option full" onclick="exportCSV('cat')">
+                <div class="export-option-icon">📊</div>
+                <div class="export-option-info">
+                    <div class="export-option-title">Kategoriya hisoboti</div>
+                    <div class="export-option-desc">Har bir kategoriya bo'yicha jami</div>
+                </div>
+                <div class="export-option-arrow">›</div>
+            </div>
+
+            <button class="modal-cancel" style="width:100%;margin-top:6px;" onclick="closeExportModal()">Yopish</button>
         </div>
     </div>
-</div>
 
-<script>
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxKaGOLzAx-KGPtZEnaaiveoowEgTxfxnROdyjSivRt0tjcvS3K4Q4f6Mi4tVYnySw/exec";
-let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
+    <!-- EDIT MODAL -->
+    <div class="modal-overlay" id="edit-modal" onclick="closeEditModal(event)">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">✏️ Tahrirlash</div>
 
-const CATS = {
-    "Oziq-ovqat": { icon: "🛒", color: "#ff9f0a" },
-    "Transport":   { icon: "🚗", color: "#0a84ff" },
-    "Uy":          { icon: "🏠", color: "#32d74b" },
-    "Sogliq":     { icon: "💊", color: "#ff453a" },
-    "Boshqa":      { icon: "📦", color: "#8e8e93" }
-};
+            <div class="modal-label">NOM</div>
+            <input class="modal-input" id="edit-name" type="text" placeholder="Nima sotib oldingiz?">
 
-let txs = [], selectedType = 'Нақд', selectedCat = "Oziq-ovqat", selectedFor = 'Ўзим';
-let currentFilter = 'day', catFilter = 'all', chartMode = 'name';
-let myChartObj = null, deferredPrompt = null;
-let editIndex = -1, editType = 'Нақд', editCat = 'Oziq-ovqat', editFor = 'Ўзим';
+            <div class="modal-label">SUMMA</div>
+            <input class="modal-input" id="edit-amt" type="number" placeholder="Summa">
 
-function fmt(n) { return Number(n).toLocaleString('uz-UZ') + " сўм"; }
-function fmtShort(n) {
-    n = Number(n);
-    if (n >= 1000000) return (n/1000000).toFixed(1) + "M";
-    if (n >= 1000) return Math.round(n/1000) + "K";
-    return n;
-}
+            <div class="modal-label">TO'LOV TURI</div>
+            <div class="type-selector" style="margin-bottom:14px;">
+                <div class="type-btn active" id="edit-type-naqd" onclick="setEditType('Нақд',this)">💵 Нақд</div>
+                <div class="type-btn" id="edit-type-karta" onclick="setEditType('Карта',this)">💳 Карта</div>
+            </div>
 
-// PWA
-window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); deferredPrompt = e;
-    document.getElementById('install-banner').classList.add('show');
-});
-window.addEventListener('appinstalled', () => {
-    document.getElementById('install-banner').classList.remove('show');
-    deferredPrompt = null;
-});
-async function installPWA() {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') document.getElementById('install-banner').classList.remove('show');
-    deferredPrompt = null;
-}
-function dismissBanner() { document.getElementById('install-banner').classList.remove('show'); }
+            <div class="modal-label">KATEGORIYA</div>
+            <div class="cat-grid" id="edit-cat-selector" style="margin-bottom:18px;"></div>
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
-}
+            <div class="modal-label">КИМ УЧУН</div>
+            <div class="for-selector" id="edit-for-selector" style="margin-bottom:18px;">
+                <div class="for-btn active" data-for="Ўзим" onclick="setEditFor('Ўзим',this)">
+                    <div class="for-dot" style="background:#64d2ff"></div> 👤 Ўзим
+                </div>
+                <div class="for-btn" data-for="Уй" onclick="setEditFor('Уй',this)">
+                    <div class="for-dot" style="background:#ffd60a"></div> 🏡 Уй
+                </div>
+            </div>
 
-function setType(t, btn) {
-    selectedType = t;
-    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+            <div class="modal-btns">
+                <button class="modal-cancel" onclick="closeEditModal()">Bekor</button>
+                <button class="modal-save" onclick="saveEdit()">Saqlash ✓</button>
+            </div>
+        </div>
+    </div>
 
-function setCat(c, btn) {
-    selectedCat = c;
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+    <script>
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxKaGOLzAx-KGPtZEnaaiveoowEgTxfxnROdyjSivRt0tjcvS3K4Q4f6Mi4tVYnySw/exec";
+        let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
 
-function setFor(f, btn) {
-    selectedFor = f;
-    document.querySelectorAll('#for-selector .for-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        let CATS = {
+            "Oziq-ovqat": { icon: "🛒", color: "#ff9f0a" },
+            "Transport": { icon: "🚗", color: "#0a84ff" },
+            "Uy": { icon: "🏠", color: "#32d74b" },
+            "Sogliq": { icon: "💊", color: "#ff453a" },
+            "Boshqa": { icon: "📦", color: "#8e8e93" }
+        };
 
-function setEditFor(f, btn) {
-    editFor = f;
-    document.querySelectorAll('#edit-for-selector .for-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        function hexToRgba(hex, alpha) {
+            var r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
 
-function setCatFilterById(c) {
-    catFilter = c;
-    document.querySelectorAll('#cat-filter-row .filter-btn').forEach(b => b.classList.remove('active'));
-    renderList();
-    const label = c === 'all' ? 'Барчаси' : c === '__uzim' ? '👤 Ўзим' : c === '__uy' ? '🏡 Уй' : (CATS[c]?.icon + ' ' + c);
-    document.getElementById('filter-label').textContent = label;
-}
+        function loadCustomCats() {
+            try {
+                const customCats = JSON.parse(localStorage.getItem('customCats') || '{}');
+                CATS = { ...CATS, ...customCats };
+            } catch(e) {}
+            generateDynamicStyles();
+        }
 
-function setCatFilter(c, btn) {
-    catFilter = c;
-    document.querySelectorAll('#cat-filter-row .filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderList();
-    const label = c === 'all' ? 'Барчаси' : c === '__uzim' ? '👤 Ўзим' : c === '__uy' ? '🏡 Уй' : (CATS[c]?.icon + ' ' + c);
-    document.getElementById('filter-label').textContent = label;
-}
+        function generateDynamicStyles() {
+            let css = '';
+            Object.entries(CATS).forEach(([k, v]) => {
+                let rgbaBg = v.color;
+                try { if(v.color.startsWith('#')) rgbaBg = hexToRgba(v.color, 0.2); } catch(e){}
+                css += `
+                .cat-btn[data-cat="${k}"].active {
+                    background: ${rgbaBg} !important;
+                    border-color: ${v.color} !important;
+                }
+                `;
+            });
+            let styleEl = document.getElementById('dynamic-cat-styles');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'dynamic-cat-styles';
+                document.head.appendChild(styleEl);
+            }
+            styleEl.innerHTML = css;
+        }
 
-function setChartMode(m, btn) {
-    chartMode = m;
-    document.querySelectorAll('#page-chart .filter-row + div .filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderAnalysis();
-}
+        function renderCategorySelectors() {
+            const catHtml = Object.entries(CATS).map(([k, v]) => `
+                <div class="cat-btn ${selectedCat === k ? 'active' : ''}" data-cat="${k}" onclick="setCat('${k}',this)">
+                    <span class="cat-icon">${v.icon}</span><span class="cat-name">${k}</span>
+                </div>
+            `).join('') + `
+                <div class="cat-btn" onclick="openAddCatModal()">
+                    <span class="cat-icon" style="color:var(--gray)">+</span><span class="cat-name">Yangi</span>
+                </div>
+            `;
+            document.getElementById('cat-selector').innerHTML = catHtml;
 
-function showTab(tab) {
-    document.getElementById('page-main').style.display = tab === 'main' ? 'block' : 'none';
-    document.getElementById('page-chart').style.display = tab === 'chart' ? 'block' : 'none';
-    document.getElementById('tab-main').classList.toggle('active', tab === 'main');
-    document.getElementById('tab-chart').classList.toggle('active', tab === 'chart');
-    if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
-}
+            const editCatHtml = Object.entries(CATS).map(([k, v]) => `
+                <div class="cat-btn ${editCat === k ? 'active' : ''}" data-cat="${k}" onclick="setEditCat('${k}',this)">
+                    <span class="cat-icon">${v.icon}</span><span class="cat-name">${k}</span>
+                </div>
+            `).join('');
+            document.getElementById('edit-cat-selector').innerHTML = editCatHtml;
 
-async function load() {
-    try {
-        const r = await fetch(GOOGLE_SHEET_URL);
-        const res = await r.json();
-        txs = res.history;
-        renderMain();
-    } catch(e) { console.log("Юклашда хатолик"); }
-}
+            const filterHtml = `
+                <button class="filter-btn ${catFilter === 'all' ? 'active' : ''}" onclick="setCatFilter('all',this)">Барча</button>
+                <button class="filter-btn ${catFilter === '__uzim' ? 'active' : ''}" onclick="setCatFilter('__uzim',this)">👤 Ўзим</button>
+                <button class="filter-btn ${catFilter === '__uy' ? 'active' : ''}" onclick="setCatFilter('__uy',this)">🏡 Уй</button>
+            ` + Object.entries(CATS).map(([k, v]) => `
+                <button class="filter-btn ${catFilter === k ? 'active' : ''}" onclick="setCatFilter('${k}',this)">${v.icon} ${k}</button>
+            `).join('');
+            document.getElementById('cat-filter-row').innerHTML = filterHtml;
+        }
 
-function renderMain() {
-    const total = txs.reduce((s, t) => s + (Number(t.amt) || 0), 0);
-    document.getElementById('total-val').textContent = fmt(total);
+        let txs = [], selectedType = 'Нақд', selectedCat = "Oziq-ovqat", selectedFor = 'Ўзим';
+        let currentFilter = 'day', catFilter = 'all', chartMode = 'name';
+        let myChartObj = null, deferredPrompt = null;
+        let editIndex = -1, editType = 'Нақд', editCat = 'Oziq-ovqat', editFor = 'Ўзим';
 
-    const pct = Math.min((total / MONTHLY_LIMIT) * 100, 100);
-    const pBar = document.getElementById('progress-bar');
-    pBar.style.width = pct + "%";
-    pBar.style.backgroundColor = pct > 90 ? 'var(--red)' : (pct > 70 ? 'var(--orange)' : 'var(--green)');
-    document.getElementById('percent-text').textContent = Math.round(pct) + "%";
-    document.getElementById('limit-text').textContent = fmt(MONTHLY_LIMIT);
+        function fmt(n) { return Number(n).toLocaleString('uz-UZ') + " сўм"; }
+        function fmtShort(n) {
+            n = Number(n);
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
+            if (n >= 1000) return Math.round(n / 1000) + "K";
+            return n;
+        }
 
-    renderCatStats();
-    renderForBalance();
-    renderPrognoz();
-    renderIncome();
-    renderList();
-    checkLimitAlerts(pct);
-}
+        // PWA
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault(); deferredPrompt = e;
+            document.getElementById('install-banner').classList.add('show');
+        });
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('install-banner').classList.remove('show');
+            deferredPrompt = null;
+        });
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') document.getElementById('install-banner').classList.remove('show');
+            deferredPrompt = null;
+        }
+        function dismissBanner() { document.getElementById('install-banner').classList.remove('show'); }
 
-function renderCatStats() {
-    const totals = {};
-    Object.keys(CATS).forEach(k => totals[k] = 0);
-    txs.forEach(t => {
-        const c = t.cat || 'Boshqa';
-        if (totals[c] !== undefined) totals[c] += Number(t.amt) || 0;
-        else totals['Boshqa'] += Number(t.amt) || 0;
-    });
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => { }));
+        }
 
-    document.getElementById('cat-stats').innerHTML = Object.entries(CATS).map(([key, val]) => `
+        function setType(t, btn) {
+            selectedType = t;
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function setCat(c, btn) {
+            selectedCat = c;
+            document.querySelectorAll('#cat-selector .cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function setFor(f, btn) {
+            selectedFor = f;
+            document.querySelectorAll('#for-selector .for-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function setEditFor(f, btn) {
+            editFor = f;
+            document.querySelectorAll('#edit-for-selector .for-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function setCatFilterById(c) {
+            catFilter = c;
+            document.querySelectorAll('#cat-filter-row .filter-btn').forEach(b => b.classList.remove('active'));
+            renderList();
+            const label = c === 'all' ? 'Барчаси' : c === '__uzim' ? '👤 Ўзим' : c === '__uy' ? '🏡 Уй' : (CATS[c]?.icon + ' ' + c);
+            document.getElementById('filter-label').textContent = label;
+        }
+
+        function setCatFilter(c, btn) {
+            catFilter = c;
+            document.querySelectorAll('#cat-filter-row .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderList();
+            const label = c === 'all' ? 'Барчаси' : c === '__uzim' ? '👤 Ўзим' : c === '__uy' ? '🏡 Уй' : (CATS[c]?.icon + ' ' + c);
+            document.getElementById('filter-label').textContent = label;
+        }
+
+        function setChartMode(m, btn) {
+            chartMode = m;
+            document.querySelectorAll('#page-chart .filter-row + div .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAnalysis();
+        }
+
+        function showTab(tab) {
+            document.getElementById('page-main').style.display = tab === 'main' ? 'block' : 'none';
+            document.getElementById('page-chart').style.display = tab === 'chart' ? 'block' : 'none';
+            document.getElementById('tab-main').classList.toggle('active', tab === 'main');
+            document.getElementById('tab-chart').classList.toggle('active', tab === 'chart');
+            if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
+        }
+
+        async function load() {
+            loadCustomCats();
+            renderCategorySelectors();
+            try {
+                const r = await fetch(GOOGLE_SHEET_URL);
+                const res = await r.json();
+                txs = res.history;
+                renderMain();
+            } catch (e) { console.log("Юклашда хатолик"); }
+        }
+
+        function getCurrentMonthTxs() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = now.getMonth();
+            return txs.filter(t => {
+                if (!t.date) return false;
+                const p = t.date.toString().split(' ')[0].split(/[./-]/);
+                if (p.length === 3) {
+                    return Number(p[1]) - 1 === m && Number(p[2]) === y;
+                }
+                const d = new Date(t.date);
+                if (!isNaN(d)) return d.getMonth() === m && d.getFullYear() === y;
+                return false;
+            });
+        }
+
+        function renderMain() {
+            const monthTxs = getCurrentMonthTxs();
+            const total = monthTxs.reduce((s, t) => s + (Number(t.amt) || 0), 0);
+            document.getElementById('total-val').textContent = fmt(total);
+
+            const pct = Math.min((total / MONTHLY_LIMIT) * 100, 100);
+            const pBar = document.getElementById('progress-bar');
+            pBar.style.width = pct + "%";
+            pBar.style.backgroundColor = pct > 90 ? 'var(--red)' : (pct > 70 ? 'var(--orange)' : 'var(--green)');
+            document.getElementById('percent-text').textContent = Math.round(pct) + "%";
+            document.getElementById('limit-text').textContent = fmt(MONTHLY_LIMIT);
+
+            renderCatStats(monthTxs);
+            renderForBalance(monthTxs);
+            renderPrognoz();
+            renderIncome();
+            renderList();
+            checkLimitAlerts(pct);
+        }
+
+        function renderCatStats(txList = txs) {
+            const totals = {};
+            Object.keys(CATS).forEach(k => totals[k] = 0);
+            txList.forEach(t => {
+                const c = t.cat || 'Boshqa';
+                if (totals[c] !== undefined) totals[c] += Number(t.amt) || 0;
+                else totals['Boshqa'] += Number(t.amt) || 0;
+            });
+
+            document.getElementById('cat-stats').innerHTML = Object.entries(CATS).map(([key, val]) => `
         <div class="cat-stat-item ${catFilter === key ? 'active' : ''}" onclick="setCatFilter('${key}', this)">
             <div class="cat-stat-icon">${val.icon}</div>
             <div class="cat-stat-amt" style="color:${val.color}">${fmtShort(totals[key])}</div>
         </div>
     `).join('');
-}
+        }
 
-function renderList() {
-    let allFiltered = txs;
-    if (catFilter === '__uzim') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Ўзим');
-    else if (catFilter === '__uy') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Уй');
-    else if (catFilter !== 'all') allFiltered = txs.filter(t => (t.cat || 'Boshqa') === catFilter);
-    document.getElementById('list').innerHTML = allFiltered.slice(0, 25).map((t, i) => {
-        const idx = txs.indexOf(t);
-        const cat = t.cat || 'Boshqa';
-        const ci = CATS[cat] || CATS['Boshqa'];
-        return `
+        function renderList() {
+            let allFiltered = txs;
+            if (catFilter === '__uzim') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Ўзим');
+            else if (catFilter === '__uy') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Уй');
+            else if (catFilter !== 'all') allFiltered = txs.filter(t => (t.cat || 'Boshqa') === catFilter);
+            document.getElementById('list').innerHTML = allFiltered.slice(0, 25).map((t, i) => {
+                const idx = txs.indexOf(t);
+                const cat = t.cat || 'Boshqa';
+                const ci = CATS[cat] || CATS['Boshqa'];
+                return `
         <div class="list-item">
             <div class="item-left">
                 <div class="item-icon-wrap" style="background:${ci.color}22;">${ci.icon}</div>
@@ -864,7 +1728,7 @@ function renderList() {
                     <span class="item-meta">
                         <span style="color:${ci.color}">${cat}</span>
                         <span class="type-badge">${t.type || 'Нақд'}</span>
-                        <span class="type-badge" style="color:${(t.for||'Ўзим')==='Уй'?'#ffd60a':'#64d2ff'}">${t.for||'Ўзим'}</span>
+                        <span class="type-badge" style="color:${(t.for || 'Ўзим') === 'Уй' ? '#ffd60a' : '#64d2ff'}">${t.for || 'Ўзим'}</span>
                         · ${t.date || ''}
                     </span>
                 </div>
@@ -875,88 +1739,88 @@ function renderList() {
                 <button class="delete-btn" onclick="deleteTx('${t.name}','${t.amt}')">✕</button>
             </div>
         </div>`;
-    }).join('') || '<div style="padding:20px;text-align:center;color:var(--gray);">Маълумот йўқ</div>';
-}
+            }).join('') || '<div style="padding:20px;text-align:center;color:var(--gray);">Маълумот йўқ</div>';
+        }
 
 
-function setFilter(f, btn) {
-    currentFilter = f;
-    document.querySelectorAll('#page-chart .filter-row:first-of-type .filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderAnalysis();
-}
+        function setFilter(f, btn) {
+            currentFilter = f;
+            document.querySelectorAll('#page-chart .filter-row:first-of-type .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAnalysis();
+        }
 
-function getFilteredTxs() {
-    const now = new Date();
-    return txs.filter(t => {
-        if (!t.date) return false;
-        const d = new Date(t.date);
-        if (isNaN(d)) return false;
-        const n0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        if (currentFilter === 'day') return d0.getTime() === n0.getTime();
-        if (currentFilter === 'week') return (n0 - d0) / 86400000 <= 7 && d0 <= n0;
-        if (currentFilter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-        return true;
-    });
-}
+        function getFilteredTxs() {
+            const now = new Date();
+            return txs.filter(t => {
+                if (!t.date) return false;
+                const d = new Date(t.date);
+                if (isNaN(d)) return false;
+                const n0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                if (currentFilter === 'day') return d0.getTime() === n0.getTime();
+                if (currentFilter === 'week') return (n0 - d0) / 86400000 <= 7 && d0 <= n0;
+                if (currentFilter === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+                return true;
+            });
+        }
 
-function renderAnalysis() {
-    const filtered = getFilteredTxs();
+        function renderAnalysis() {
+            const filtered = getFilteredTxs();
 
-    let labels, data, colors, sorted;
+            let labels, data, colors, sorted;
 
-    if (chartMode === 'cat') {
-        const totals = {};
-        Object.keys(CATS).forEach(k => totals[k] = 0);
-        filtered.forEach(t => {
-            const c = t.cat || 'Boshqa';
-            totals[c] = (totals[c] || 0) + Number(t.amt);
-        });
-        sorted = Object.entries(totals).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
-        labels = sorted.map(([k]) => CATS[k]?.icon + ' ' + k);
-        data   = sorted.map(([,v]) => v);
-        colors = sorted.map(([k]) => CATS[k]?.color || '#8e8e93');
-    } else {
-        const summary = {};
-        filtered.forEach(t => {
-            const n = t.name?.trim() || 'Номаълум';
-            summary[n] = (summary[n] || 0) + Number(t.amt);
-        });
-        sorted = Object.entries(summary).sort((a,b) => b[1]-a[1]);
-        labels = sorted.map(([k]) => k);
-        data   = sorted.map(([,v]) => v);
-        colors = sorted.map(([k,], i) => {
-            const tx = filtered.find(t => t.name?.trim() === k);
-            const c = tx?.cat || 'Boshqa';
-            return CATS[c]?.color || '#8e8e93';
-        });
-    }
+            if (chartMode === 'cat') {
+                const totals = {};
+                Object.keys(CATS).forEach(k => totals[k] = 0);
+                filtered.forEach(t => {
+                    const c = t.cat || 'Boshqa';
+                    totals[c] = (totals[c] || 0) + Number(t.amt);
+                });
+                sorted = Object.entries(totals).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+                labels = sorted.map(([k]) => CATS[k]?.icon + ' ' + k);
+                data = sorted.map(([, v]) => v);
+                colors = sorted.map(([k]) => CATS[k]?.color || '#8e8e93');
+            } else {
+                const summary = {};
+                filtered.forEach(t => {
+                    const n = t.name?.trim() || 'Номаълум';
+                    summary[n] = (summary[n] || 0) + Number(t.amt);
+                });
+                sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
+                labels = sorted.map(([k]) => k);
+                data = sorted.map(([, v]) => v);
+                colors = sorted.map(([k,], i) => {
+                    const tx = filtered.find(t => t.name?.trim() === k);
+                    const c = tx?.cat || 'Boshqa';
+                    return CATS[c]?.color || '#8e8e93';
+                });
+            }
 
-    // Legend
-    if (chartMode === 'cat') {
-        const total = data.reduce((a,b) => a+b, 0);
-        document.getElementById('chart-legend').innerHTML = sorted.map(([k, v]) => `
+            // Legend
+            if (chartMode === 'cat') {
+                const total = data.reduce((a, b) => a + b, 0);
+                document.getElementById('chart-legend').innerHTML = sorted.map(([k, v]) => `
             <div class="legend-item">
                 <div class="legend-color" style="background:${CATS[k]?.color}"></div>
                 <div class="legend-info">
                     <span class="legend-name">${CATS[k]?.icon} ${k}</span>
-                    <span class="legend-pct">${fmt(v)} · ${total ? Math.round(v/total*100) : 0}%</span>
+                    <span class="legend-pct">${fmt(v)} · ${total ? Math.round(v / total * 100) : 0}%</span>
                 </div>
             </div>
         `).join('');
-    } else {
-        document.getElementById('chart-legend').innerHTML = '';
-    }
+            } else {
+                document.getElementById('chart-legend').innerHTML = '';
+            }
 
-    // Group list
-    const groupList = document.getElementById('group-list');
-    if (sorted.length === 0) {
-        groupList.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray);">Бу давр учун маълумот топилмади</div>';
-    } else {
-        groupList.innerHTML = sorted.map(([n, s], i) => {
-            const color = colors[i];
-            return `
+            // Group list
+            const groupList = document.getElementById('group-list');
+            if (sorted.length === 0) {
+                groupList.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray);">Бу давр учун маълумот топилмади</div>';
+            } else {
+                groupList.innerHTML = sorted.map(([n, s], i) => {
+                    const color = colors[i];
+                    return `
             <div class="list-item">
                 <div style="display:flex;align-items:center;gap:10px;">
                     <div class="cat-dot" style="background:${color}"></div>
@@ -964,273 +1828,277 @@ function renderAnalysis() {
                 </div>
                 <b style="color:var(--red)">-${fmt(s)}</b>
             </div>`;
-        }).join('');
-    }
-
-    // Chart
-    const ctx = document.getElementById('myChart').getContext('2d');
-    if (myChartObj) myChartObj.destroy();
-    if (data.length > 0) {
-        myChartObj = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels,
-                datasets: [{ data, backgroundColor: colors, borderWidth: 0 }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                cutout: '72%', responsive: true, maintainAspectRatio: false
+                }).join('');
             }
-        });
-    }
-}
 
-function parseCombined(val) {
-    const prev = document.getElementById('f-preview');
-    const match = val.trim().match(/^(.+?)\s+([\d\s]+)$/);
-    if (match) {
-        const name = match[1].trim();
-        const amt  = match[2].replace(/\s/g,'');
-        prev.innerHTML = `<span style="color:#fff">${name}</span> <span style="color:var(--green);font-weight:600">${Number(amt).toLocaleString('uz-UZ')} сўм</span>`;
-    } else if (val.trim()) {
-        prev.textContent = 'Охирида сумма ёзинг…';
-    } else {
-        prev.textContent = '';
-    }
-}
+            // Chart
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (myChartObj) myChartObj.destroy();
+            if (data.length > 0) {
+                myChartObj = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels,
+                        datasets: [{ data, backgroundColor: colors, borderWidth: 0 }]
+                    },
+                    options: {
+                        plugins: { legend: { display: false } },
+                        cutout: '72%', responsive: true, maintainAspectRatio: false
+                    }
+                });
+            }
+        }
 
-async function addTx() {
-    const raw = document.getElementById('f-combined').value.trim();
-    const match = raw.match(/^(.+?)\s+([\d\s]+)$/);
-    if (!match) {
-        document.getElementById('f-combined').style.outline = '2px solid var(--red)';
-        setTimeout(() => document.getElementById('f-combined').style.outline = '', 1000);
-        return;
-    }
-    const n = match[1].trim();
-    const a = match[2].replace(/\s/g,'');
-    const newTx = {
-        name: n, amt: a, type: selectedType,
-        cat: selectedCat, for: selectedFor,
-        date: new Date().toLocaleDateString('uz-UZ')
-    };
-    txs.unshift(newTx); renderMain();
-    document.getElementById('f-combined').value = '';
-    document.getElementById('f-preview').textContent = '';
-    await fetch(GOOGLE_SHEET_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(newTx) });
-    setTimeout(load, 1500);
-}
+        function parseCombined(val) {
+            const prev = document.getElementById('f-preview');
+            const match = val.trim().match(/^(.+?)\s+([\d\s]+)$/);
+            if (match) {
+                const name = match[1].trim();
+                const amt = match[2].replace(/\s/g, '');
+                prev.innerHTML = `<span style="color:#fff">${name}</span> <span style="color:var(--green);font-weight:600">${Number(amt).toLocaleString('uz-UZ')} сўм</span>`;
+            } else if (val.trim()) {
+                prev.textContent = 'Охирида сумма ёзинг…';
+            } else {
+                prev.textContent = '';
+            }
+        }
 
-async function deleteTx(name, amt) {
-    if (!confirm("Ушбу харажат ўчирилсинми?")) return;
-    txs = txs.filter(t => !(t.name === name && t.amt == amt));
-    renderMain();
-    await fetch(GOOGLE_SHEET_URL, { method:'POST', mode:'no-cors', body: JSON.stringify({action:'delete', name, amt}) });
-    setTimeout(load, 1000);
-}
+        async function addTx() {
+            const raw = document.getElementById('f-combined').value.trim();
+            const match = raw.match(/^(.+?)\s+([\d\s]+)$/);
+            if (!match) {
+                document.getElementById('f-combined').style.outline = '2px solid var(--red)';
+                setTimeout(() => document.getElementById('f-combined').style.outline = '', 1000);
+                return;
+            }
+            const n = match[1].trim();
+            const a = match[2].replace(/\s/g, '');
+            const newTx = {
+                name: n, amt: a, type: selectedType,
+                cat: selectedCat, for: selectedFor,
+                date: new Date().toLocaleDateString('uz-UZ')
+            };
+            txs.unshift(newTx); renderMain();
+            document.getElementById('f-combined').value = '';
+            document.getElementById('f-preview').textContent = '';
+            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(newTx) });
+            setTimeout(load, 1500);
+        }
 
-function openEditModal(idx) {
-    const t = txs[idx];
-    if (!t) return;
-    editIndex = idx;
-    editType = t.type || 'Нақд';
-    editCat = t.cat || 'Boshqa';
+        async function deleteTx(name, amt) {
+            if (!confirm("Ушбу харажат ўчирилсинми?")) return;
+            txs = txs.filter(t => !(t.name === name && t.amt == amt));
+            renderMain();
+            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', name, amt }) });
+            setTimeout(load, 1000);
+        }
 
-    document.getElementById('edit-name').value = t.name;
-    document.getElementById('edit-amt').value = t.amt;
+        function openEditModal(idx) {
+            const t = txs[idx];
+            if (!t) return;
+            editIndex = idx;
+            editType = t.type || 'Нақд';
+            editCat = t.cat || 'Boshqa';
 
-    // Sync payment type buttons
-    document.querySelectorAll('#edit-modal .type-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(editType === 'Карта' ? 'edit-type-karta' : 'edit-type-naqd').classList.add('active');
+            document.getElementById('edit-name').value = t.name;
+            document.getElementById('edit-amt').value = t.amt;
 
-    // Sync category buttons
-    document.querySelectorAll('#edit-cat-selector .cat-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.cat === editCat);
-    });
+            // Sync payment type buttons
+            document.querySelectorAll('#edit-modal .type-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(editType === 'Карта' ? 'edit-type-karta' : 'edit-type-naqd').classList.add('active');
 
-    editFor = t.for || 'Ўзим';
-    document.querySelectorAll('#edit-for-selector .for-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.for === editFor);
-    });
+            // Sync category buttons
+            document.querySelectorAll('#edit-cat-selector .cat-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.cat === editCat);
+            });
 
-    document.getElementById('edit-modal').classList.add('show');
-    setTimeout(() => document.getElementById('edit-name').focus(), 300);
-}
+            editFor = t.for || 'Ўзим';
+            document.querySelectorAll('#edit-for-selector .for-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.for === editFor);
+            });
 
-function closeEditModal(e) {
-    if (e && e.target !== document.getElementById('edit-modal')) return;
-    document.getElementById('edit-modal').classList.remove('show');
-    editIndex = -1;
-}
+            document.getElementById('edit-modal').classList.add('show');
+            setTimeout(() => document.getElementById('edit-name').focus(), 300);
+        }
 
-function setEditType(t, btn) {
-    editType = t;
-    document.querySelectorAll('#edit-modal .type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        function closeEditModal(e) {
+            if (e && e.target !== document.getElementById('edit-modal')) return;
+            document.getElementById('edit-modal').classList.remove('show');
+            editIndex = -1;
+        }
 
-function setEditCat(c, btn) {
-    editCat = c;
-    document.querySelectorAll('#edit-cat-selector .cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        function setEditType(t, btn) {
+            editType = t;
+            document.querySelectorAll('#edit-modal .type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
-async function saveEdit() {
-    if (editIndex < 0) return;
-    const newName = document.getElementById('edit-name').value.trim();
-    const newAmt  = document.getElementById('edit-amt').value;
-    if (!newName || !newAmt) return;
+        function setEditCat(c, btn) {
+            editCat = c;
+            document.querySelectorAll('#edit-cat-selector .cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
-    const old = txs[editIndex];
-    const updated = { ...old, name: newName, amt: newAmt, type: editType, cat: editCat, for: editFor };
+        async function saveEdit() {
+            if (editIndex < 0) return;
+            const newName = document.getElementById('edit-name').value.trim();
+            const newAmt = document.getElementById('edit-amt').value;
+            if (!newName || !newAmt) return;
 
-    // Update locally
-    txs[editIndex] = updated;
-    document.getElementById('edit-modal').classList.remove('show');
-    editIndex = -1;
-    renderMain();
+            const old = txs[editIndex];
+            const updated = { ...old, name: newName, amt: newAmt, type: editType, cat: editCat, for: editFor };
 
-    // Sync to Google Sheets: delete old, add new
-    await fetch(GOOGLE_SHEET_URL, { method:'POST', mode:'no-cors',
-        body: JSON.stringify({ action:'delete', name: old.name, amt: old.amt }) });
-    await fetch(GOOGLE_SHEET_URL, { method:'POST', mode:'no-cors',
-        body: JSON.stringify(updated) });
-    setTimeout(load, 1500);
-}
+            // Update locally
+            txs[editIndex] = updated;
+            document.getElementById('edit-modal').classList.remove('show');
+            editIndex = -1;
+            renderMain();
 
-function openExportModal() {
-    const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun',
-                    'Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
-    const now = new Date();
-    document.getElementById('export-month-label').textContent =
-        months[now.getMonth()] + ' ' + now.getFullYear() + ' — xarajatlar';
-    document.getElementById('export-modal').classList.add('show');
-}
+            // Sync to Google Sheets: delete old, add new
+            await fetch(GOOGLE_SHEET_URL, {
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({ action: 'delete', name: old.name, amt: old.amt })
+            });
+            await fetch(GOOGLE_SHEET_URL, {
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify(updated)
+            });
+            setTimeout(load, 1500);
+        }
 
-function closeExportModal(e) {
-    if (e && e.target !== document.getElementById('export-modal')) return;
-    document.getElementById('export-modal').classList.remove('show');
-}
+        function openExportModal() {
+            const months = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+                'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+            const now = new Date();
+            document.getElementById('export-month-label').textContent =
+                months[now.getMonth()] + ' ' + now.getFullYear() + ' — xarajatlar';
+            document.getElementById('export-modal').classList.add('show');
+        }
 
-function exportCSV(mode) {
-    const now = new Date();
-    let rows, filename;
+        function closeExportModal(e) {
+            if (e && e.target !== document.getElementById('export-modal')) return;
+            document.getElementById('export-modal').classList.remove('show');
+        }
 
-    if (mode === 'all') {
-        rows = [...txs];
-        filename = 'rasxod_barchasi.csv';
-    } else if (mode === 'month') {
-        rows = txs.filter(t => {
-            const d = new Date(t.date);
-            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-        });
-        const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun',
-                        'Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
-        filename = 'rasxod_' + months[now.getMonth()].toLowerCase() + '_' + now.getFullYear() + '.csv';
-    } else if (mode === 'cat') {
-        // Summary by category
-        const totals = {};
-        txs.forEach(t => {
-            const cat = t.cat || 'Boshqa';
-            totals[cat] = (totals[cat] || 0) + Number(t.amt);
-        });
-        const BOM = '\uFEFF';
-        const header = 'Kategoriya,Jami (so\'m),Foizi (%)\n';
-        const total = Object.values(totals).reduce((a,b) => a+b, 0);
-        const body = Object.entries(totals)
-            .sort((a,b) => b[1]-a[1])
-            .map(([k,v]) => `${k},${v},${total ? (v/total*100).toFixed(1) : 0}`)
-            .join('\n');
-        downloadCSV(BOM + header + body, 'rasxod_kategoriya.csv');
-        document.getElementById('export-modal').classList.remove('show');
-        return;
-    }
+        function exportCSV(mode) {
+            const now = new Date();
+            let rows, filename;
 
-    const BOM = '\uFEFF';
-    const header = 'Sana,Nom,Kategoriya,Summa (so\'m),To\'lov turi\n';
-    const body = rows.map(t =>
-        `${t.date || ''},${(t.name || '').replace(/,/g,'؛')},${t.cat || 'Boshqa'},${t.amt},${t.type || 'Нақд'}`
-    ).join('\n');
+            if (mode === 'all') {
+                rows = [...txs];
+                filename = 'rasxod_barchasi.csv';
+            } else if (mode === 'month') {
+                rows = txs.filter(t => {
+                    const d = new Date(t.date);
+                    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+                });
+                const months = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+                    'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+                filename = 'rasxod_' + months[now.getMonth()].toLowerCase() + '_' + now.getFullYear() + '.csv';
+            } else if (mode === 'cat') {
+                // Summary by category
+                const totals = {};
+                txs.forEach(t => {
+                    const cat = t.cat || 'Boshqa';
+                    totals[cat] = (totals[cat] || 0) + Number(t.amt);
+                });
+                const BOM = '\uFEFF';
+                const header = 'Kategoriya,Jami (so\'m),Foizi (%)\n';
+                const total = Object.values(totals).reduce((a, b) => a + b, 0);
+                const body = Object.entries(totals)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([k, v]) => `${k},${v},${total ? (v / total * 100).toFixed(1) : 0}`)
+                    .join('\n');
+                downloadCSV(BOM + header + body, 'rasxod_kategoriya.csv');
+                document.getElementById('export-modal').classList.remove('show');
+                return;
+            }
 
-    downloadCSV(BOM + header + body, filename);
-    document.getElementById('export-modal').classList.remove('show');
-}
+            const BOM = '\uFEFF';
+            const header = 'Sana,Nom,Kategoriya,Summa (so\'m),To\'lov turi\n';
+            const body = rows.map(t =>
+                `${t.date || ''},${(t.name || '').replace(/,/g, '؛')},${t.cat || 'Boshqa'},${t.amt},${t.type || 'Нақд'}`
+            ).join('\n');
 
-function downloadCSV(content, filename) {
-    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+            downloadCSV(BOM + header + body, filename);
+            document.getElementById('export-modal').classList.remove('show');
+        }
+
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
 
 
-// ══════════════════════════════════
-// DAROMAD (INCOME) LOGIC
-// ══════════════════════════════════
-function getIncomes() {
-    try { return JSON.parse(localStorage.getItem('incomes') || '[]'); } catch(e) { return []; }
-}
-function saveIncomes(arr) { localStorage.setItem('incomes', JSON.stringify(arr)); }
+        // ══════════════════════════════════
+        // DAROMAD (INCOME) LOGIC
+        // ══════════════════════════════════
+        function getIncomes() {
+            try { return JSON.parse(localStorage.getItem('incomes') || '[]'); } catch (e) { return []; }
+        }
+        function saveIncomes(arr) { localStorage.setItem('incomes', JSON.stringify(arr)); }
 
-function addIncome() {
-    const raw = document.getElementById('income-input').value.trim();
-    const match = raw.match(/^(.+?)\s+([\d\s]+)$/);
-    if (!match) {
-        document.getElementById('income-input').style.outline = '2px solid var(--red)';
-        setTimeout(() => document.getElementById('income-input').style.outline = '', 1000);
-        return;
-    }
-    const name = match[1].trim();
-    const amt  = Number(match[2].replace(/\s/g,''));
-    const incomes = getIncomes();
-    incomes.unshift({ name, amt, date: new Date().toLocaleDateString('uz-UZ') });
-    saveIncomes(incomes);
-    document.getElementById('income-input').value = '';
-    renderIncome();
-}
+        function addIncome() {
+            const raw = document.getElementById('income-input').value.trim();
+            const match = raw.match(/^(.+?)\s+([\d\s]+)$/);
+            if (!match) {
+                document.getElementById('income-input').style.outline = '2px solid var(--red)';
+                setTimeout(() => document.getElementById('income-input').style.outline = '', 1000);
+                return;
+            }
+            const name = match[1].trim();
+            const amt = Number(match[2].replace(/\s/g, ''));
+            const incomes = getIncomes();
+            incomes.unshift({ name, amt, date: new Date().toLocaleDateString('uz-UZ') });
+            saveIncomes(incomes);
+            document.getElementById('income-input').value = '';
+            renderIncome();
+        }
 
-function deleteIncome(idx) {
-    const incomes = getIncomes();
-    incomes.splice(idx, 1);
-    saveIncomes(incomes);
-    renderIncome();
-}
+        function deleteIncome(idx) {
+            const incomes = getIncomes();
+            incomes.splice(idx, 1);
+            saveIncomes(incomes);
+            renderIncome();
+        }
 
-function toggleIncomeHistory() {
-    const el = document.getElementById('income-history');
-    const btn = document.querySelector('.income-toggle');
-    if (el.style.display === 'none') {
-        el.style.display = 'block';
-        btn.textContent = 'Тарих ▴';
-    } else {
-        el.style.display = 'none';
-        btn.textContent = 'Тарих ▾';
-    }
-}
+        function toggleIncomeHistory() {
+            const el = document.getElementById('income-history');
+            const btn = document.querySelector('.income-toggle');
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+                btn.textContent = 'Тарих ▴';
+            } else {
+                el.style.display = 'none';
+                btn.textContent = 'Тарих ▾';
+            }
+        }
 
-function renderIncome() {
-    const incomes = getIncomes();
-    // Shu oy incomes
-    const now = new Date();
-    const monthIncomes = incomes.filter(i => {
-        const d = new Date(i.date);
-        return !isNaN(d) && d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
-    });
-    const totalIncome = monthIncomes.reduce((s,i) => s+i.amt, 0);
+        function renderIncome() {
+            const incomes = getIncomes();
+            // Shu oy incomes
+            const now = new Date();
+            const monthIncomes = incomes.filter(i => {
+                const d = new Date(i.date);
+                return !isNaN(d) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            });
+            const totalIncome = monthIncomes.reduce((s, i) => s + i.amt, 0);
 
-    document.getElementById('income-total').textContent = fmt(totalIncome);
+            document.getElementById('income-total').textContent = fmt(totalIncome);
 
-    // Faqat daromad ko'rsatiladi — xarajat bilan bog'liq emas
-    const balEl = document.getElementById('income-balance');
-    balEl.className = 'income-balance positive';
-    balEl.textContent = incomes.length > 0 ? incomes.length + ' та киrim · shu oy: ' + monthIncomes.length + ' та' : '';
+            // Faqat daromad ko'rsatiladi — xarajat bilan bog'liq emas
+            const balEl = document.getElementById('income-balance');
+            balEl.className = 'income-balance positive';
+            balEl.textContent = incomes.length > 0 ? incomes.length + ' та киrim · shu oy: ' + monthIncomes.length + ' та' : '';
 
-    // History
-    document.getElementById('income-history').innerHTML = incomes.slice(0,10).map((i,idx) => `
+            // History
+            document.getElementById('income-history').innerHTML = incomes.slice(0, 10).map((i, idx) => `
         <div class="income-item">
             <div>
                 <span style="font-weight:600;">${i.name}</span>
@@ -1242,67 +2110,109 @@ function renderIncome() {
             </div>
         </div>
     `).join('') || '<div style="padding:10px 0;color:var(--gray);font-size:12px;">Даромад йўқ</div>';
-}
+        }
 
 
-// ── Alert state ──
-let alertShown70 = false, alertShown90 = false;
-let trendChartObj = null;
+        // ── Alert state ──
+        let alertShown70 = false, alertShown90 = false;
+        let trendChartObj = null;
 
-// ── Limit modal ──
-function openLimitModal() {
-    document.getElementById('limit-input').value = MONTHLY_LIMIT;
-    document.getElementById('limit-modal').classList.add('show');
-}
-function closeLimitModal(e) {
-    if (e && e.target !== document.getElementById('limit-modal')) return;
-    document.getElementById('limit-modal').classList.remove('show');
-}
-function saveLimit() {
-    const v = Number(document.getElementById('limit-input').value);
-    if (!v || v < 1000) return;
-    MONTHLY_LIMIT = v;
-    localStorage.setItem('monthlyLimit', v);
-    alertShown70 = false; alertShown90 = false;
-    document.getElementById('limit-modal').classList.remove('show');
-    renderMain();
-}
+        // ── Limit modal ──
+        function openLimitModal() {
+            document.getElementById('limit-input').value = MONTHLY_LIMIT;
+            document.getElementById('limit-modal').classList.add('show');
+        }
+        function closeLimitModal(e) {
+            if (e && e.target !== document.getElementById('limit-modal')) return;
+            document.getElementById('limit-modal').classList.remove('show');
+        }
+        function saveLimit() {
+            const v = Number(document.getElementById('limit-input').value);
+            if (!v || v < 1000) return;
+            MONTHLY_LIMIT = v;
+            localStorage.setItem('monthlyLimit', v);
+            alertShown70 = false; alertShown90 = false;
+            document.getElementById('limit-modal').classList.remove('show');
+            renderMain();
+        }
 
-// ── Alert toast ──
-function showAlert(type, title, sub) {
-    const existing = document.querySelector('.alert-toast');
-    if (existing) existing.remove();
-    const el = document.createElement('div');
-    el.className = 'alert-toast ' + type;
-    el.innerHTML = `
+        // ── Alert toast ──
+        function showAlert(type, title, sub) {
+            const existing = document.querySelector('.alert-toast');
+            if (existing) existing.remove();
+            const el = document.createElement('div');
+            el.className = 'alert-toast ' + type;
+            el.innerHTML = `
         <div class="alert-toast-icon">${type === 'danger' ? '🚨' : '⚠️'}</div>
         <div class="alert-toast-text"><b>${title}</b><span>${sub}</span></div>
         <button class="alert-toast-close" onclick="this.parentElement.remove()">✕</button>
     `;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 7000);
-}
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 7000);
+        }
 
-function checkLimitAlerts(pct) {
-    if (pct >= 90 && !alertShown90) {
-        alertShown90 = true;
-        showAlert('danger', '🚨 Лимитнинг 90% га етдингиз!', 'Фақат ' + fmt(MONTHLY_LIMIT * 0.1) + ' қолди.');
-    } else if (pct >= 70 && !alertShown70) {
-        alertShown70 = true;
-        showAlert('warn', '⚠️ Лимитнинг 70% га етдингиз!', 'Эҳтиёт бўлинг — ' + fmt(MONTHLY_LIMIT * 0.3) + ' қолди.');
-    }
-}
+        let newCatColor = '#ff453a';
 
-// ── For balance ──
-function renderForBalance() {
-    const uzim    = txs.reduce((s,t) => (t.for||'Ўзим')==='Ўзим' ? s+(Number(t.amt)||0) : s, 0);
-    const uy      = txs.reduce((s,t) => (t.for||'Ўзим')==='Уй'   ? s+(Number(t.amt)||0) : s, 0);
-    const cntUzim = txs.filter(t => (t.for||'Ўзим')==='Ўзим').length;
-    const cntUy   = txs.filter(t => (t.for||'Ўзим')==='Уй').length;
-    const total   = uzim + uy || 1;
-    const pUzim   = Math.round(uzim/total*100);
-    const pUy     = Math.round(uy/total*100);
-    document.getElementById('for-balance').innerHTML = `
+        function openAddCatModal() {
+            document.getElementById('new-cat-name').value = '';
+            document.getElementById('new-cat-icon').value = '';
+            document.getElementById('add-cat-modal').classList.add('show');
+            
+            document.querySelectorAll('#new-cat-colors .color-picker-btn').forEach(btn => {
+                btn.onclick = function() {
+                    document.querySelectorAll('#new-cat-colors .color-picker-btn').forEach(b => b.style.borderColor = 'transparent');
+                    this.style.borderColor = '#fff';
+                    newCatColor = this.dataset.color;
+                };
+            });
+        }
+
+        function closeAddCatModal(e) {
+            if (e && e.target !== document.getElementById('add-cat-modal')) return;
+            document.getElementById('add-cat-modal').classList.remove('show');
+        }
+
+        function saveNewCat() {
+            const name = document.getElementById('new-cat-name').value.trim();
+            const icon = document.getElementById('new-cat-icon').value.trim() || '📂';
+            if (!name) return;
+
+            if (CATS[name]) {
+                showAlert('warn', 'Xato', 'Bu kategoriya allaqachon mavjud');
+                return;
+            }
+
+            const customCats = JSON.parse(localStorage.getItem('customCats') || '{}');
+            customCats[name] = { icon, color: newCatColor };
+            localStorage.setItem('customCats', JSON.stringify(customCats));
+
+            loadCustomCats();
+            renderCategorySelectors();
+            renderCatStats(getCurrentMonthTxs());
+            closeAddCatModal();
+            showAlert('warn', '✅ Kategoriya qo\'shildi', name);
+        }
+
+        function checkLimitAlerts(pct) {
+            if (pct >= 90 && !alertShown90) {
+                alertShown90 = true;
+                showAlert('danger', '🚨 Лимитнинг 90% га етдингиз!', 'Фақат ' + fmt(MONTHLY_LIMIT * 0.1) + ' қолди.');
+            } else if (pct >= 70 && !alertShown70) {
+                alertShown70 = true;
+                showAlert('warn', '⚠️ Лимитнинг 70% га етдингиз!', 'Эҳтиёт бўлинг — ' + fmt(MONTHLY_LIMIT * 0.3) + ' қолди.');
+            }
+        }
+
+        // ── For balance ──
+        function renderForBalance(txList = txs) {
+            const uzim = txList.reduce((s, t) => (t.for || 'Ўзим') === 'Ўзим' ? s + (Number(t.amt) || 0) : s, 0);
+            const uy = txList.reduce((s, t) => (t.for || 'Ўзим') === 'Уй' ? s + (Number(t.amt) || 0) : s, 0);
+            const cntUzim = txList.filter(t => (t.for || 'Ўзим') === 'Ўзим').length;
+            const cntUy = txList.filter(t => (t.for || 'Ўзим') === 'Уй').length;
+            const total = uzim + uy || 1;
+            const pUzim = Math.round(uzim / total * 100);
+            const pUy = Math.round(uy / total * 100);
+            document.getElementById('for-balance').innerHTML = `
         <div class="for-balance-card" onclick="setCatFilterById('__uzim')" style="cursor:pointer;">
             <div class="for-balance-label">👤 ЎЗИМ УЧУН</div>
             <div class="for-balance-amount" style="color:#64d2ff">${fmt(uzim)}</div>
@@ -1314,279 +2224,275 @@ function renderForBalance() {
             <div class="for-balance-sub">${cntUy} та харажат · ${pUy}%</div>
         </div>
     `;
-}
-
-// ── Trend chart ──
-function renderTrend() {
-    const now = new Date();
-    const days = [], totals = [];
-    const dayNames = ['Як','Душ','Сеш','Чор','Пай','Жум','Шан'];
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date(now); d.setDate(d.getDate() - i);
-        const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        const sum = txs.reduce((s,t) => {
-            const td = new Date(t.date);
-            if (isNaN(td)) return s;
-            const td0 = new Date(td.getFullYear(), td.getMonth(), td.getDate());
-            return td0.getTime() === d0.getTime() ? s + (Number(t.amt)||0) : s;
-        }, 0);
-        days.push(dayNames[d.getDay()]);
-        totals.push(sum);
-    }
-
-    const ctx = document.getElementById('trendChart').getContext('2d');
-    if (trendChartObj) trendChartObj.destroy();
-    trendChartObj = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: days,
-            datasets: [{
-                data: totals,
-                backgroundColor: totals.map((v, i) => {
-                    const max = Math.max(...totals);
-                    return v === max && v > 0 ? '#ff453a' : 'rgba(10,132,255,0.6)';
-                }),
-                borderRadius: 8, borderSkipped: false
-            }]
-        },
-        options: {
-            plugins: { legend: { display:false } },
-            scales: {
-                y: { ticks:{ color:'#8e8e93', font:{size:10}, callback: v => v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000)+'K':v }, grid:{color:'rgba(255,255,255,0.05)'} },
-                x: { ticks:{ color:'#8e8e93', font:{size:11} }, grid:{display:false} }
-            },
-            responsive:true, maintainAspectRatio:false
         }
-    });
-}
 
-// ── Month compare ──
-function getMonthList() {
-    const months = new Set();
-    txs.forEach(t => {
-        if (!t.date) return;
-        const p = t.date.toString().split(' ')[0].split('.');
-        if (p.length === 3) months.add(p[1]+'.'+p[2]);
-    });
-    return [...months].sort().reverse();
-}
+        // ── Trend chart ──
+        function renderTrend() {
+            const now = new Date();
+            const days = [], totals = [];
+            const dayNames = ['Як', 'Душ', 'Сеш', 'Чор', 'Пай', 'Жум', 'Шан'];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(now); d.setDate(d.getDate() - i);
+                const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                const sum = txs.reduce((s, t) => {
+                    const td = new Date(t.date);
+                    if (isNaN(td)) return s;
+                    const td0 = new Date(td.getFullYear(), td.getMonth(), td.getDate());
+                    return td0.getTime() === d0.getTime() ? s + (Number(t.amt) || 0) : s;
+                }, 0);
+                days.push(dayNames[d.getDay()]);
+                totals.push(sum);
+            }
 
-function populateCompareSelects() {
-    const months = getMonthList();
-    const monthNames = {'01':'Янв','02':'Фев','03':'Мар','04':'Апр','05':'Май','06':'Июн','07':'Июл','08':'Авг','09':'Сен','10':'Окт','11':'Ноя','12':'Дек'};
-    const toLabel = mY => { const p=mY.split('.'); return (monthNames[p[0]]||p[0])+' '+p[1]; };
-    ['cmp-m1','cmp-m2'].forEach((id, idx) => {
-        const sel = document.getElementById(id);
-        const cur = sel.value;
-        sel.innerHTML = months.map(m => `<option value="${m}">${toLabel(m)}</option>`).join('');
-        if (cur && months.includes(cur)) sel.value = cur;
-        else if (months[idx]) sel.value = months[idx];
-    });
-    renderCompare();
-}
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if (trendChartObj) trendChartObj.destroy();
+            trendChartObj = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        data: totals,
+                        backgroundColor: totals.map((v, i) => {
+                            const max = Math.max(...totals);
+                            return v === max && v > 0 ? '#ff453a' : 'rgba(10,132,255,0.6)';
+                        }),
+                        borderRadius: 8, borderSkipped: false
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { color: '#8e8e93', font: { size: 10 }, callback: v => v >= 1000000 ? (v / 1000000).toFixed(1) + 'M' : v >= 1000 ? (v / 1000) + 'K' : v }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#8e8e93', font: { size: 11 } }, grid: { display: false } }
+                    },
+                    responsive: true, maintainAspectRatio: false
+                }
+            });
+        }
 
-function getTxsForMonth(mY) {
-    return txs.filter(t => {
-        if (!t.date) return false;
-        const p = t.date.toString().split(' ')[0].split('.');
-        return p.length === 3 && (p[1]+'.'+p[2]) === mY;
-    });
-}
+        // ── Month compare ──
+        function getMonthList() {
+            const months = new Set();
+            txs.forEach(t => {
+                if (!t.date) return;
+                const p = t.date.toString().split(' ')[0].split('.');
+                if (p.length === 3) months.add(p[1] + '.' + p[2]);
+            });
+            return [...months].sort().reverse();
+        }
 
-function renderCompare() {
-    const m1 = document.getElementById('cmp-m1').value;
-    const m2 = document.getElementById('cmp-m2').value;
-    if (!m1 || !m2 || m1 === m2) {
-        document.getElementById('compare-result').innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray);font-size:13px;">Иккита турли ой танланг</div>';
-        return;
-    }
-    const txs1 = getTxsForMonth(m1), txs2 = getTxsForMonth(m2);
-    const sum1 = txs1.reduce((s,t)=>s+(Number(t.amt)||0),0);
-    const sum2 = txs2.reduce((s,t)=>s+(Number(t.amt)||0),0);
+        function populateCompareSelects() {
+            const months = getMonthList();
+            const monthNames = { '01': 'Янв', '02': 'Фев', '03': 'Мар', '04': 'Апр', '05': 'Май', '06': 'Июн', '07': 'Июл', '08': 'Авг', '09': 'Сен', '10': 'Окт', '11': 'Ноя', '12': 'Дек' };
+            const toLabel = mY => { const p = mY.split('.'); return (monthNames[p[0]] || p[0]) + ' ' + p[1]; };
+            ['cmp-m1', 'cmp-m2'].forEach((id, idx) => {
+                const sel = document.getElementById(id);
+                const cur = sel.value;
+                sel.innerHTML = months.map(m => `<option value="${m}">${toLabel(m)}</option>`).join('');
+                if (cur && months.includes(cur)) sel.value = cur;
+                else if (months[idx]) sel.value = months[idx];
+            });
+            renderCompare();
+        }
 
-    // By category
-    const catTotals1 = {}, catTotals2 = {};
-    Object.keys(CATS).forEach(k => { catTotals1[k]=0; catTotals2[k]=0; });
-    txs1.forEach(t=>{ const c=t.cat||'Boshqa'; catTotals1[c]=(catTotals1[c]||0)+(Number(t.amt)||0); });
-    txs2.forEach(t=>{ const c=t.cat||'Boshqa'; catTotals2[c]=(catTotals2[c]||0)+(Number(t.amt)||0); });
+        function getTxsForMonth(mY) {
+            return txs.filter(t => {
+                if (!t.date) return false;
+                const p = t.date.toString().split(' ')[0].split('.');
+                return p.length === 3 && (p[1] + '.' + p[2]) === mY;
+            });
+        }
 
-    const monthNames = {'01':'Янв','02':'Фев','03':'Мар','04':'Апр','05':'Май','06':'Июн','07':'Июл','08':'Авг','09':'Сен','10':'Окт','11':'Ноя','12':'Дек'};
-    const toLabel = mY => { const p=mY.split('.'); return (monthNames[p[0]]||p[0])+' '+p[1]; };
-    const diffArrow = (a,b) => {
-        if (a===b) return '<span style="color:var(--gray)">—</span>';
-        const d = a-b, pct = b>0?Math.round(Math.abs(d)/b*100):0;
-        return d<0
-            ? `<span style="color:var(--green)">↓${fmtShort(Math.abs(d))} (${pct}%)</span>`
-            : `<span style="color:var(--red)">↑${fmtShort(d)} (${pct}%)</span>`;
-    };
+        function renderCompare() {
+            const m1 = document.getElementById('cmp-m1').value;
+            const m2 = document.getElementById('cmp-m2').value;
+            if (!m1 || !m2 || m1 === m2) {
+                document.getElementById('compare-result').innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray);font-size:13px;">Иккита турли ой танланг</div>';
+                return;
+            }
+            const txs1 = getTxsForMonth(m1), txs2 = getTxsForMonth(m2);
+            const sum1 = txs1.reduce((s, t) => s + (Number(t.amt) || 0), 0);
+            const sum2 = txs2.reduce((s, t) => s + (Number(t.amt) || 0), 0);
 
-    const diffTotal = sum1 - sum2;
-    let html = `
+            // By category
+            const catTotals1 = {}, catTotals2 = {};
+            Object.keys(CATS).forEach(k => { catTotals1[k] = 0; catTotals2[k] = 0; });
+            txs1.forEach(t => { const c = t.cat || 'Boshqa'; catTotals1[c] = (catTotals1[c] || 0) + (Number(t.amt) || 0); });
+            txs2.forEach(t => { const c = t.cat || 'Boshqa'; catTotals2[c] = (catTotals2[c] || 0) + (Number(t.amt) || 0); });
+
+            const monthNames = { '01': 'Янв', '02': 'Фев', '03': 'Мар', '04': 'Апр', '05': 'Май', '06': 'Июн', '07': 'Июл', '08': 'Авг', '09': 'Сен', '10': 'Окт', '11': 'Ноя', '12': 'Дек' };
+            const toLabel = mY => { const p = mY.split('.'); return (monthNames[p[0]] || p[0]) + ' ' + p[1]; };
+            const diffArrow = (a, b) => {
+                if (a === b) return '<span style="color:var(--gray)">—</span>';
+                const d = a - b, pct = b > 0 ? Math.round(Math.abs(d) / b * 100) : 0;
+                return d < 0
+                    ? `<span style="color:var(--green)">↓${fmtShort(Math.abs(d))} (${pct}%)</span>`
+                    : `<span style="color:var(--red)">↑${fmtShort(d)} (${pct}%)</span>`;
+            };
+
+            const diffTotal = sum1 - sum2;
+            let html = `
     <div class="compare-item" style="background:rgba(255,255,255,0.03);">
         <div class="compare-name" style="font-weight:700;">Жами</div>
         <div class="compare-vals">
             <span class="compare-m1" style="color:var(--accent)">${fmt(sum1)}</span>
             <span class="compare-m2">${toLabel(m2)}: ${fmt(sum2)}</span>
         </div>
-        <div class="compare-diff">${diffArrow(sum1,sum2)}</div>
+        <div class="compare-diff">${diffArrow(sum1, sum2)}</div>
     </div>`;
 
-    Object.entries(CATS).forEach(([key,val]) => {
-        const v1=catTotals1[key]||0, v2=catTotals2[key]||0;
-        if (v1===0 && v2===0) return;
-        html += `
+            Object.entries(CATS).forEach(([key, val]) => {
+                const v1 = catTotals1[key] || 0, v2 = catTotals2[key] || 0;
+                if (v1 === 0 && v2 === 0) return;
+                html += `
         <div class="compare-item">
             <div class="compare-name">${val.icon} ${key}</div>
             <div class="compare-vals">
                 <span class="compare-m1" style="color:${val.color}">${fmt(v1)}</span>
                 <span class="compare-m2">${fmt(v2)}</span>
             </div>
-            <div class="compare-diff">${diffArrow(v1,v2)}</div>
+            <div class="compare-diff">${diffArrow(v1, v2)}</div>
         </div>`;
-    });
-    document.getElementById('compare-result').innerHTML = html;
-}
-
-
-// ══════════════════════════════════
-// PIN KOD LOGIC
-// ══════════════════════════════════
-let pinBuffer = '', pinMode = 'check'; // check | set | confirm
-let pinNewTemp = '';
-
-function pinInit() {
-    const savedPin = localStorage.getItem('appPin');
-    const screen = document.getElementById('pin-screen');
-    if (!savedPin) {
-        screen.classList.add('hidden');
-        return;
-    }
-    // Show PIN screen
-    pinMode = 'check';
-    document.getElementById('pin-subtitle').textContent = 'PIN кодни киритинг';
-    document.getElementById('pin-forgot-btn').style.display = 'block';
-    screen.classList.remove('hidden');
-}
-
-function pinPress(d) {
-    if (pinBuffer.length >= 4) return;
-    pinBuffer += d;
-    updatePinDots();
-    if (pinBuffer.length === 4) setTimeout(pinCheck, 180);
-}
-
-function pinDel() {
-    pinBuffer = pinBuffer.slice(0, -1);
-    updatePinDots();
-}
-
-function updatePinDots(state) {
-    for (let i = 0; i < 4; i++) {
-        const dot = document.getElementById('pd' + i);
-        dot.className = 'pin-dot' + (i < pinBuffer.length ? ' filled' : '') + (state === 'error' ? ' error' : '');
-    }
-}
-
-function pinCheck() {
-    if (pinMode === 'check') {
-        const saved = localStorage.getItem('appPin');
-        if (pinBuffer === saved) {
-            document.getElementById('pin-screen').classList.add('hidden');
-        } else {
-            updatePinDots('error');
-            document.getElementById('pin-subtitle').textContent = 'Нотўғри PIN — қайта уринib кўринг';
-            pinBuffer = '';
-            setTimeout(() => updatePinDots(), 600);
+            });
+            document.getElementById('compare-result').innerHTML = html;
         }
-    } else if (pinMode === 'set') {
-        pinNewTemp = pinBuffer;
-        pinBuffer = '';
-        pinMode = 'confirm';
-        document.getElementById('pin-subtitle').textContent = 'PIN кодни тасдиқланг';
-        updatePinDots();
-    } else if (pinMode === 'confirm') {
-        if (pinBuffer === pinNewTemp) {
-            localStorage.setItem('appPin', pinBuffer);
-            pinBuffer = ''; pinNewTemp = '';
-            document.getElementById('pin-screen').classList.add('hidden');
-            document.getElementById('pin-settings-modal').classList.remove('show');
-            showAlert('warn', '✅ PIN ўрнатилди', 'Кейинги сафар PIN сўралади.');
-        } else {
-            updatePinDots('error');
-            document.getElementById('pin-subtitle').textContent = 'Мос келмади — қайта киритинг';
-            pinBuffer = ''; pinMode = 'set'; pinNewTemp = '';
-            setTimeout(() => {
+
+
+        // ══════════════════════════════════
+        // PIN KOD LOGIC
+        // ══════════════════════════════════
+        let pinBuffer = '', pinMode = 'check'; // check | set | confirm
+        let pinNewTemp = '';
+
+        function pinInit() {
+            const savedPin = localStorage.getItem('appPin');
+            const screen = document.getElementById('pin-screen');
+            if (!savedPin) {
+                screen.classList.add('hidden');
+                return;
+            }
+            // Show PIN screen
+            pinMode = 'check';
+            document.getElementById('pin-subtitle').textContent = 'PIN кодни киритинг';
+            document.getElementById('pin-forgot-btn').style.display = 'block';
+            screen.classList.remove('hidden');
+        }
+
+        function pinPress(d) {
+            if (pinBuffer.length >= 4) return;
+            pinBuffer += d;
+            updatePinDots();
+            if (pinBuffer.length === 4) setTimeout(pinCheck, 180);
+        }
+
+        function pinDel() {
+            pinBuffer = pinBuffer.slice(0, -1);
+            updatePinDots();
+        }
+
+        function updatePinDots(state) {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById('pd' + i);
+                dot.className = 'pin-dot' + (i < pinBuffer.length ? ' filled' : '') + (state === 'error' ? ' error' : '');
+            }
+        }
+
+        function pinCheck() {
+            if (pinMode === 'check') {
+                const saved = localStorage.getItem('appPin');
+                if (pinBuffer === saved) {
+                    document.getElementById('pin-screen').classList.add('hidden');
+                } else {
+                    updatePinDots('error');
+                    document.getElementById('pin-subtitle').textContent = 'Нотўғри PIN — қайта уринib кўринг';
+                    pinBuffer = '';
+                    setTimeout(() => updatePinDots(), 600);
+                }
+            } else if (pinMode === 'set') {
+                pinNewTemp = pinBuffer;
+                pinBuffer = '';
+                pinMode = 'confirm';
+                document.getElementById('pin-subtitle').textContent = 'PIN кодни тасдиқланг';
                 updatePinDots();
-                document.getElementById('pin-subtitle').textContent = 'Янги PIN ўрнатинг';
-            }, 700);
+            } else if (pinMode === 'confirm') {
+                if (pinBuffer === pinNewTemp) {
+                    localStorage.setItem('appPin', pinBuffer);
+                    pinBuffer = ''; pinNewTemp = '';
+                    document.getElementById('pin-screen').classList.add('hidden');
+                    document.getElementById('pin-settings-modal').classList.remove('show');
+                    showAlert('warn', '✅ PIN ўрнатилди', 'Кейинги сафар PIN сўралади.');
+                } else {
+                    updatePinDots('error');
+                    document.getElementById('pin-subtitle').textContent = 'Мос келмади — қайта киритинг';
+                    pinBuffer = ''; pinMode = 'set'; pinNewTemp = '';
+                    setTimeout(() => {
+                        updatePinDots();
+                        document.getElementById('pin-subtitle').textContent = 'Янги PIN ўрнатинг';
+                    }, 700);
+                }
+            }
         }
-    }
-}
 
-function pinForgot() {
-    if (confirm('PIN кодни ўчириб, иловани очасизми?')) {
-        localStorage.removeItem('appPin');
-        document.getElementById('pin-screen').classList.add('hidden');
-    }
-}
+        function pinForgot() {
+            if (confirm('PIN кодни ўчириб, иловани очасизми?')) {
+                localStorage.removeItem('appPin');
+                document.getElementById('pin-screen').classList.add('hidden');
+            }
+        }
 
-function openPinSettings() {
-    const hasPIN = !!localStorage.getItem('appPin');
-    document.getElementById('pin-settings-body').innerHTML = hasPIN
-        ? '<button class="save-btn" style="margin-bottom:12px;" onclick="startSetPin()">PIN ни ўзгартириш</button><button class="modal-cancel" style="width:100%;" onclick="disablePin()">PIN ни ўчириш</button>'
-        : '<button class="save-btn" style="width:100%;" onclick="startSetPin()">PIN ўрнатиш</button>';
-    document.getElementById('pin-settings-modal').classList.add('show');
-}
+        function openPinSettings() {
+            const hasPIN = !!localStorage.getItem('appPin');
+            document.getElementById('pin-settings-body').innerHTML = hasPIN
+                ? '<button class="save-btn" style="margin-bottom:12px;" onclick="startSetPin()">PIN ни ўзгартириш</button><button class="modal-cancel" style="width:100%;" onclick="disablePin()">PIN ни ўчириш</button>'
+                : '<button class="save-btn" style="width:100%;" onclick="startSetPin()">PIN ўрнатиш</button>';
+            document.getElementById('pin-settings-modal').classList.add('show');
+        }
 
-function closePinSettings(e) {
-    if (e && e.target !== document.getElementById('pin-settings-modal')) return;
-    document.getElementById('pin-settings-modal').classList.remove('show');
-}
+        function closePinSettings(e) {
+            if (e && e.target !== document.getElementById('pin-settings-modal')) return;
+            document.getElementById('pin-settings-modal').classList.remove('show');
+        }
 
-function startSetPin() {
-    document.getElementById('pin-settings-modal').classList.remove('show');
-    pinBuffer = ''; pinMode = 'set'; pinNewTemp = '';
-    document.getElementById('pin-subtitle').textContent = 'Янги PIN ўрнатинг';
-    document.getElementById('pin-forgot-btn').style.display = 'none';
-    updatePinDots();
-    document.getElementById('pin-screen').classList.remove('hidden');
-}
+        function startSetPin() {
+            document.getElementById('pin-settings-modal').classList.remove('show');
+            pinBuffer = ''; pinMode = 'set'; pinNewTemp = '';
+            document.getElementById('pin-subtitle').textContent = 'Янги PIN ўрнатинг';
+            document.getElementById('pin-forgot-btn').style.display = 'none';
+            updatePinDots();
+            document.getElementById('pin-screen').classList.remove('hidden');
+        }
 
-function disablePin() {
-    localStorage.removeItem('appPin');
-    document.getElementById('pin-settings-modal').classList.remove('show');
-    showAlert('warn', 'PIN ўчирилди', 'Илова ҳимоясиз очилади.');
-}
+        function disablePin() {
+            localStorage.removeItem('appPin');
+            document.getElementById('pin-settings-modal').classList.remove('show');
+            showAlert('warn', 'PIN ўчирилди', 'Илова ҳимоясиз очилади.');
+        }
 
-// ══════════════════════════════════
-// PROGNOZ LOGIC
-// ══════════════════════════════════
-function renderPrognoz() {
-    const now = new Date();
-    const y = now.getFullYear(), m = now.getMonth();
-    const daysInMonth = new Date(y, m+1, 0).getDate();
-    const daysPassed = now.getDate();
-    const daysLeft = daysInMonth - daysPassed;
+        // ══════════════════════════════════
+        // PROGNOZ LOGIC
+        // ══════════════════════════════════
+        function renderPrognoz() {
+            const now = new Date();
+            const y = now.getFullYear(), m = now.getMonth();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const daysPassed = now.getDate();
+            const daysLeft = daysInMonth - daysPassed;
 
-    // Shu oyning xarajatlari
-    const monthTxs = txs.filter(t => {
-        if (!t.date) return false;
-        const d = new Date(t.date);
-        return !isNaN(d) && d.getMonth() === m && d.getFullYear() === y;
-    });
-    const spentSoFar = monthTxs.reduce((s,t) => s+(Number(t.amt)||0), 0);
-    const dailyAvg = daysPassed > 0 ? spentSoFar / daysPassed : 0;
-    const forecast = spentSoFar + dailyAvg * daysLeft;
-    const pct = Math.min(forecast / MONTHLY_LIMIT * 100, 150);
-    const barColor = pct > 100 ? '#ff453a' : pct > 80 ? '#ff9f0a' : '#32d74b';
-    const overBudget = forecast > MONTHLY_LIMIT;
-    const diff = Math.abs(forecast - MONTHLY_LIMIT);
+            // Shu oyning xarajatlari
+            const monthTxs = getCurrentMonthTxs();
+            const spentSoFar = monthTxs.reduce((s, t) => s + (Number(t.amt) || 0), 0);
+            const dailyAvg = daysPassed > 0 ? spentSoFar / daysPassed : 0;
+            const forecast = spentSoFar + dailyAvg * daysLeft;
+            const pct = Math.min(forecast / MONTHLY_LIMIT * 100, 150);
+            const barColor = pct > 100 ? '#ff453a' : pct > 80 ? '#ff9f0a' : '#32d74b';
+            const overBudget = forecast > MONTHLY_LIMIT;
+            const diff = Math.abs(forecast - MONTHLY_LIMIT);
 
-    const card = document.getElementById('prognoz-card');
-    if (spentSoFar === 0) { card.style.display = 'none'; return; }
-    card.style.display = 'block';
+            const card = document.getElementById('prognoz-card');
+            if (spentSoFar === 0) { card.style.display = 'none'; return; }
+            card.style.display = 'block';
 
-    card.innerHTML = `
+            card.innerHTML = `
         <div class="prognoz-row">
             <span class="prognoz-label">📈 ОЙ ЯКУНИ ПРОГНОЗИ</span>
             <span style="font-size:11px;color:var(--gray);">${daysPassed} кун / ${daysInMonth} кун</span>
@@ -1600,19 +2506,20 @@ function renderPrognoz() {
             <span class="prognoz-val" style="color:${barColor}">${fmt(Math.round(forecast))}</span>
         </div>
         <div class="prognoz-bar-bg">
-            <div class="prognoz-bar-fill" style="width:${Math.min(pct,100)}%;background:${barColor};"></div>
+            <div class="prognoz-bar-fill" style="width:${Math.min(pct, 100)}%;background:${barColor};"></div>
         </div>
         <div class="prognoz-warn" style="background:${overBudget ? 'rgba(255,69,58,0.12)' : 'rgba(50,215,75,0.12)'};color:${overBudget ? '#ff453a' : '#32d74b'};">
             ${overBudget
-                ? `⚠️ Лимитдан <b>${fmt(Math.round(diff))}</b> ошиши кутилмоқда`
-                : `✅ Лимитдан <b>${fmt(Math.round(diff))}</b> қолиши кутилмоқда`}
+                    ? `⚠️ Лимитдан <b>${fmt(Math.round(diff))}</b> ошиши кутилмоқда`
+                    : `✅ Лимитдан <b>${fmt(Math.round(diff))}</b> қолиши кутилмоқда`}
         </div>
     `;
-}
+        }
 
 
-pinInit();
-load();
-</script>
+        pinInit();
+        load();
+    </script>
 </body>
+
 </html>
