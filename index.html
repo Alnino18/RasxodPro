@@ -1764,6 +1764,16 @@
             if (catFilter === '__uzim') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Ўзим');
             else if (catFilter === '__uy') allFiltered = txs.filter(t => (t.for || 'Ўзим') === 'Уй');
             else if (catFilter !== 'all') allFiltered = txs.filter(t => (t.cat || 'Boshqa') === catFilter);
+
+            // Sanasi bo'yicha yangi avval tartiblash
+            allFiltered = [...allFiltered].sort((a, b) => {
+                const da = parseDate(a.date), db = parseDate(b.date);
+                if (!da && !db) return 0;
+                if (!da) return 1;
+                if (!db) return -1;
+                return db - da;
+            });
+
             document.getElementById('list').innerHTML = allFiltered.slice(0, 25).map((t, i) => {
                 const idx = txs.indexOf(t);
                 const cat = t.cat || 'Boshqa';
