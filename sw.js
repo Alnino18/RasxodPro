@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rasxod-v1';
+const CACHE_NAME = 'rasxod-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -25,14 +25,19 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Google Sheets API ni cache qilmaymiz
-  if (e.request.url.includes('script.google.com')) return;
-  
+  const url = e.request.url;
+
+  // Google Script (JSONP) va tashqi so'rovlarni cache qilmaymiz
+  if (url.includes('script.google.com') || url.includes('googleapis.com')) return;
+
   e.respondWith(
     caches.match(e.request).then(cached => {
       return cached || fetch(e.request).then(res => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+        // Faqat muvaffaqiyatli va opaque bo'lmagan javoblarni cache qilamiz
+        if (res && res.status === 200 && res.type !== 'opaque') {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+        }
         return res;
       });
     }).catch(() => caches.match('./index.html'))
