@@ -2123,7 +2123,10 @@
             const name = match[1].trim();
             const amt = Number(match[2].replace(/\s/g, ''));
             const incomes = getIncomes();
-            incomes.unshift({ name, amt, date: new Date().toLocaleDateString('uz-UZ') });
+            const now2 = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const dateStr = `${pad(now2.getDate())}.${pad(now2.getMonth() + 1)}.${now2.getFullYear()}`;
+            incomes.unshift({ name, amt, date: dateStr });
             saveIncomes(incomes);
             document.getElementById('income-input').value = '';
             renderIncome();
@@ -2153,7 +2156,10 @@
             // Shu oy incomes
             const now = new Date();
             const monthIncomes = incomes.filter(i => {
-                const d = new Date(i.date);
+                if (!i.date) return false;
+                const parts = i.date.split('.');
+                if (parts.length < 3) return false;
+                const d = new Date(parts[2], parts[1] - 1, parts[0]);
                 return !isNaN(d) && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
             });
             const totalIncome = monthIncomes.reduce((s, i) => s + i.amt, 0);
