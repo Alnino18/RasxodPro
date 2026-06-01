@@ -1220,7 +1220,7 @@
 
             <div class="limit-container">
                 <div class="limit-info">
-                    <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">5,000,000</b>
+                    <span class="limit-edit-row" onclick="openLimitModal()">Лимит: <b id="limit-text">6,000,000</b>
                         <span class="limit-edit-icon">✎</span></span>
                     <span id="percent-text">0%</span>
                 </div>
@@ -1493,7 +1493,7 @@
     </div>
 
     <script>
-        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwjBBzb216vDwZfzPJ9pC1kX4obUm-JPQLb2F8OPVS6zgC43fTo4s-QAa4x8k3jDL3E/exec";
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx02J9BnTUo6ikx-pJ3l24bqyuRyhlACWdH6cUNVw_zLUyFq51m-R4B3NUczBmxaM9S/exec";
         let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
 
         let CATS = {
@@ -1660,15 +1660,55 @@
             if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
         }
 
+        // JSONP yordamida CORS muammosini hal qilamiz
+        function loadJsonp(url) {
+            return new Promise((resolve, reject) => {
+                const cbName = '_gs_cb_' + Date.now();
+                const script = document.createElement('script');
+                const timeout = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Timeout — server javob bermadi'));
+                }, 10000);
+                function cleanup() {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+                window[cbName] = function (data) {
+                    cleanup();
+                    resolve(data);
+                };
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cbName;
+                script.onerror = () => { cleanup(); reject(new Error('Script yuklanmadi')); };
+                document.head.appendChild(script);
+            });
+        }
+
         async function load() {
             loadCustomCats();
             renderCategorySelectors();
             try {
-                const r = await fetch(GOOGLE_SHEET_URL);
-                const res = await r.json();
+                console.log("⏳ Yuklanmoqda...");
+                const res = await loadJsonp(GOOGLE_SHEET_URL);
+                if (!res.history) {
+                    console.error("❌ 'history' maydoni yo'q:", res);
+                    return;
+                }
+                console.log("✅ Yuklandi:", res.history.length, "ta yozuv");
                 txs = res.history;
+                if (res.categories) {
+                    const serverCats = {};
+                    Object.entries(res.categories).forEach(([k, v]) => {
+                        serverCats[k] = { icon: v.icon, color: v.color };
+                    });
+                    CATS = { ...serverCats, ...JSON.parse(localStorage.getItem('customCats') || '{}') };
+                    generateDynamicStyles();
+                    renderCategorySelectors();
+                }
                 renderMain();
-            } catch (e) { console.log("Юклашда хатолик"); }
+            } catch (e) {
+                console.error("❌ Yuklash xatosi:", e.message);
+            }
         }
 
         function getCurrentMonthTxs() {
@@ -1677,13 +1717,9 @@
             const m = now.getMonth();
             return txs.filter(t => {
                 if (!t.date) return false;
-                const p = t.date.toString().split(' ')[0].split(/[./-]/);
-                if (p.length === 3) {
-                    return Number(p[1]) - 1 === m && Number(p[2]) === y;
-                }
-                const d = new Date(t.date);
-                if (!isNaN(d)) return d.getMonth() === m && d.getFullYear() === y;
-                return false;
+                const d = parseDate(t.date);
+                if (!d) return false;
+                return d.getMonth() === m && d.getFullYear() === y;
             });
         }
 
@@ -1764,13 +1800,25 @@
             renderAnalysis();
         }
 
+        // "dd.MM.yyyy HH:mm" yoki "dd.MM.yyyy" formatini to'g'ri parse qiladi
+        function parseDate(str) {
+            if (!str) return null;
+            const s = str.toString().trim();
+            // dd.MM.yyyy HH:mm  yoki  dd.MM.yyyy
+            const m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+            if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+            // fallback: ISO yoki boshqa
+            const d = new Date(s);
+            return isNaN(d) ? null : d;
+        }
+
         function getFilteredTxs() {
             const now = new Date();
+            const n0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             return txs.filter(t => {
                 if (!t.date) return false;
-                const d = new Date(t.date);
-                if (isNaN(d)) return false;
-                const n0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const d = parseDate(t.date);
+                if (!d) return false;
                 const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
                 if (currentFilter === 'day') return d0.getTime() === n0.getTime();
                 if (currentFilter === 'week') return (n0 - d0) / 86400000 <= 7 && d0 <= n0;
@@ -1887,10 +1935,13 @@
             }
             const n = match[1].trim();
             const a = match[2].replace(/\s/g, '');
+            const now2 = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const dateStr = `${pad(now2.getDate())}.${pad(now2.getMonth() + 1)}.${now2.getFullYear()} ${pad(now2.getHours())}:${pad(now2.getMinutes())}`;
             const newTx = {
                 name: n, amt: a, type: selectedType,
                 cat: selectedCat, for: selectedFor,
-                date: new Date().toLocaleDateString('uz-UZ')
+                date: dateStr
             };
             txs.unshift(newTx); renderMain();
             document.getElementById('f-combined').value = '';
@@ -2249,8 +2300,8 @@
                 const d = new Date(now); d.setDate(d.getDate() - i);
                 const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
                 const sum = txs.reduce((s, t) => {
-                    const td = new Date(t.date);
-                    if (isNaN(td)) return s;
+                    const td = parseDate(t.date);
+                    if (!td) return s;
                     const td0 = new Date(td.getFullYear(), td.getMonth(), td.getDate());
                     return td0.getTime() === d0.getTime() ? s + (Number(t.amt) || 0) : s;
                 }, 0);
