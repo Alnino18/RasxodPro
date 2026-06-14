@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rasxod-v6';
+const CACHE_NAME = 'rasxod-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -27,8 +27,15 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = e.request.url;
 
-  // Google Script (JSONP) va tashqi so'rovlarni cache qilmaymiz
-  if (url.includes('script.google.com') || url.includes('googleapis.com')) return;
+  // Firebase va Google Script so'rovlarini cache qilmaymiz
+  if (
+    url.includes('script.google.com') ||
+    url.includes('googleapis.com') ||
+    url.includes('firestore.googleapis.com') ||
+    url.includes('firebase.googleapis.com') ||
+    url.includes('firebaseapp.com') ||
+    url.includes('gstatic.com/firebasejs')
+  ) return;
 
   e.respondWith(
     caches.match(e.request).then(cached => {

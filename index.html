@@ -1492,8 +1492,91 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        // ══════════════════════════════════
+        // FIREBASE CONFIG — o'z config'ingizni qo'ying
+        // ══════════════════════════════════
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import {
+            getFirestore, collection, addDoc, getDocs,
+            deleteDoc, query, where, orderBy, doc, updateDoc, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2vzpvfKpxhdbntGL425vpKdAzSRTg6Zs",
+            authDomain: "rasxodpro.firebaseapp.com",
+            projectId: "rasxodpro",
+            storageBucket: "rasxodpro.firebasestorage.app",
+            messagingSenderId: "741760127010",
+            appId: "1:741760127010:web:9d470e8fe53276778cfa7b",
+            measurementId: "G-QKX7QF3E07"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const COL = "transactions"; // Firestore collection nomi
+
+        // Firebase funksiyalarini global qilamiz (script type=module izolatsiyasi tufayli)
+        window._fb = {
+            async addTxFB(tx) {
+                try {
+                    const { _id, createdAt, ...cleanTx } = tx;
+                    await addDoc(collection(db, COL), { ...cleanTx, createdAt: serverTimestamp() });
+                } catch (e) { console.error("FB add:", e); }
+            },
+            async deleteTxFB(name, amt) {
+                try {
+                    const q = query(collection(db, COL), where("name", "==", name), where("amt", "==", String(amt)));
+                    const snap = await getDocs(q);
+                    await Promise.all(snap.docs.map(d => deleteDoc(doc(db, COL, d.id))));
+                } catch (e) { console.error("FB delete:", e); }
+            },
+            async deleteTxById(id) {
+                try {
+                    await deleteDoc(doc(db, COL, id));
+                } catch (e) { console.error("FB deleteById:", e); }
+            },
+            async loadFromFB() {
+                try {
+                    const snap = await getDocs(query(collection(db, COL), orderBy("createdAt", "desc")));
+                    return snap.docs.map(d => {
+                        const r = d.data();
+                        return {
+                            _id: d.id,
+                            name: r.name || '',
+                            amt: Number(r.amt || 0),
+                            date: r.date || '',
+                            type: r.type || 'Нақд',
+                            cat: r.cat || 'Boshqa',
+                            for: r['for'] || 'Ўзим'
+                        };
+                    }).filter(r => r.name && r.amt);
+                } catch (e) {
+                    console.error("FB load:", e);
+                    return null; // null = xato
+                }
+            },
+            async updateTxFB(id, oldTx, newTx) {
+                try {
+                    // _id va createdAt ni Firestoreda saqlamaymiz
+                    const { _id, createdAt, ...cleanNew } = newTx;
+                    if (id) {
+                        await updateDoc(doc(db, COL, id), cleanNew);
+                    } else {
+                        await this.deleteTxFB(oldTx.name, oldTx.amt);
+                        await addDoc(collection(db, COL), { ...cleanNew, createdAt: serverTimestamp() });
+                    }
+                } catch (e) { console.error("FB update:", e); }
+            }
+        };
+
+        // Firebase tayyor bo'lgandan keyin load() ni chaqiramiz
+        window._fbReady = true;
+        if (window._pendingLoad) window._pendingLoad();
+    </script>
+
     <script>
-        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzbRf1iN8xhrCTS9FX5nvbg0VyN_Rg1JIAF9UvTJLzIfZQa22YyF5DIROAv57kxZ2tb/exec";
         let MONTHLY_LIMIT = Number(localStorage.getItem("monthlyLimit")) || 6000000;
 
         let CATS = {
@@ -1660,28 +1743,11 @@
             if (tab === 'chart') { renderAnalysis(); renderTrend(); populateCompareSelects(); }
         }
 
-        // Apps Script doGet orqali ma'lumot olish (gviz CORS muammosi yo'q)
-        async function loadFromSheets() {
-            const url = GOOGLE_SHEET_URL + '?t=' + Date.now();
-            const r = await fetch(url);
-            const json = await r.json();
-            // doGet { history: [...], stats: {...}, categories: {...} qaytaradi
-            const rows = json.history || [];
-            return rows.map(r => ({
-                name: r.name || '',
-                amt: Number(r.amt || 0),
-                date: r.date || '',
-                type: r.type || 'Нақд',
-                cat: r.cat || 'Boshqa',
-                for: r['for'] || 'Ўзим'
-            })).filter(r => r.name && r.amt);
-        }
-
         async function load() {
             loadCustomCats();
             renderCategorySelectors();
 
-            // Avval localStorage dan eski ma'lumotlarni yuklab ko'rsatamiz
+            // Avval localStorage cache dan ko'rsatamiz
             try {
                 const cached = localStorage.getItem('txsCache');
                 if (cached) {
@@ -1693,15 +1759,24 @@
                 console.warn("Cache o'qishda xato:", e.message);
             }
 
-            // Keyin Google Sheets dan yangilaymiz
+            // Firebase tayyor bo'lishini kutamiz
+            if (!window._fbReady) {
+                window._pendingLoad = doFirebaseLoad;
+            } else {
+                doFirebaseLoad();
+            }
+        }
+
+        async function doFirebaseLoad() {
             try {
-                const rows = await loadFromSheets();
-                console.log("✅ Sheets dan yuklandi:", rows.length, "ta yozuv");
-                txs = rows.reverse(); // Yangi avval
-                localStorage.setItem('txsCache', JSON.stringify(txs)); // Cache ga saqlaymiz
+                const rows = await window._fb.loadFromFB();
+                if (rows === null) throw new Error("Firebase xato qaytardi");
+                console.log("✅ Firebase dan yuklandi:", rows.length, "ta yozuv");
+                txs = rows;
+                localStorage.setItem('txsCache', JSON.stringify(txs));
                 renderMain();
             } catch (e) {
-                console.error("❌ Sheets yuklanmadi:", e.message);
+                console.error("❌ Firebase yuklanmadi:", e.message);
                 if (txs.length === 0) {
                     console.warn("⚠️ Ma'lumot yo'q — cache ham bo'sh");
                 } else {
@@ -1795,7 +1870,7 @@
             <div style="display:flex;align-items:center;gap:4px;">
                 <b style="color:var(--red);font-size:14px;">-${fmt(t.amt)}</b>
                 <button class="edit-btn" onclick="openEditModal(${idx})">✏️</button>
-                <button class="delete-btn" onclick="deleteTx('${t.name}','${t.amt}')">✕</button>
+                <button class="delete-btn" onclick="deleteTx('${t.name}','${t.amt}','${t._id || ''}')">✕</button>
             </div>
         </div>`;
             }).join('') || '<div style="padding:20px;text-align:center;color:var(--gray);">Маълумот йўқ</div>';
@@ -1957,17 +2032,21 @@
             localStorage.setItem('txsCache', JSON.stringify(txs));
             document.getElementById('f-combined').value = '';
             document.getElementById('f-preview').textContent = '';
-            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(newTx) });
-            setTimeout(load, 1500);
+            if (window._fb) await window._fb.addTxFB(newTx);
+            setTimeout(doFirebaseLoad, 1500);
         }
 
-        async function deleteTx(name, amt) {
+        async function deleteTx(name, amt, id) {
             if (!confirm("Ушбу харажат ўчирилсинми?")) return;
             txs = txs.filter(t => !(t.name === name && t.amt == amt));
             renderMain();
             localStorage.setItem('txsCache', JSON.stringify(txs));
-            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', name, amt }) });
-            setTimeout(load, 1000);
+            if (id) {
+                await window._fb.deleteTxById(id);
+            } else {
+                await window._fb.deleteTxFB(name, amt);
+            }
+            setTimeout(doFirebaseLoad, 1000);
         }
 
         function openEditModal(idx) {
@@ -2032,16 +2111,9 @@
             renderMain();
             localStorage.setItem('txsCache', JSON.stringify(txs));
 
-            // Sync to Google Sheets: delete old, add new
-            await fetch(GOOGLE_SHEET_URL, {
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({ action: 'delete', name: old.name, amt: old.amt })
-            });
-            await fetch(GOOGLE_SHEET_URL, {
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify(updated)
-            });
-            setTimeout(load, 1500);
+            // Sync to Firebase
+            await window._fb.updateTxFB(old._id, old, updated);
+            setTimeout(doFirebaseLoad, 1500);
         }
 
         function openExportModal() {
