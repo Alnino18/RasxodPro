@@ -50,10 +50,26 @@
             z-index: 100;
         }
 
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo svg {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+
         h1 {
-            font-size: 32px;
+            font-size: 28px;
             margin: 0;
             font-weight: 700;
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .main-card {
@@ -1179,8 +1195,26 @@
 
     <!-- PIN SCREEN -->
     <div id="pin-screen">
-        <div class="pin-logo">🔐</div>
-        <div class="pin-title">X Rasxod</div>
+        <div class="pin-logo">
+            <svg viewBox="0 0 100 100" width="72" height="72" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="pxg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#22c55e"/>
+                  <stop offset="100%" style="stop-color:#15803d"/>
+                </linearGradient>
+                <linearGradient id="pxg2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#4ade80"/>
+                  <stop offset="100%" style="stop-color:#166534"/>
+                </linearGradient>
+              </defs>
+              <rect width="100" height="100" rx="22" fill="#1a1a1a"/>
+              <line x1="20" y1="20" x2="50" y2="50" stroke="url(#pxg1)" stroke-width="18" stroke-linecap="round"/>
+              <line x1="80" y1="20" x2="50" y2="50" stroke="url(#pxg2)" stroke-width="18" stroke-linecap="round"/>
+              <line x1="50" y1="50" x2="80" y2="80" stroke="url(#pxg1)" stroke-width="18" stroke-linecap="round"/>
+              <line x1="50" y1="50" x2="20" y2="80" stroke="url(#pxg2)" stroke-width="18" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="pin-title" style="background:linear-gradient(135deg,#22c55e,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rasxod</div>
         <div class="pin-subtitle" id="pin-subtitle">PIN кодни киритинг</div>
         <div class="pin-dots" id="pin-dots">
             <div class="pin-dot" id="pd0"></div>
@@ -1207,8 +1241,27 @@
 
     <!-- MAIN PAGE -->
     <div id="page-main">
-        <div class="header" style="display:flex;justify-content:space-between;align-items:flex-end;">
-            <h1>X Rasxod</h1>
+        <div class="header" style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="header-logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="hxg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#22c55e"/>
+                      <stop offset="100%" style="stop-color:#15803d"/>
+                    </linearGradient>
+                    <linearGradient id="hxg2" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4ade80"/>
+                      <stop offset="100%" style="stop-color:#166534"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="100" height="100" rx="22" fill="#111"/>
+                  <line x1="20" y1="20" x2="50" y2="50" stroke="url(#hxg1)" stroke-width="18" stroke-linecap="round"/>
+                  <line x1="80" y1="20" x2="50" y2="50" stroke="url(#hxg2)" stroke-width="18" stroke-linecap="round"/>
+                  <line x1="50" y1="50" x2="80" y2="80" stroke="url(#hxg1)" stroke-width="18" stroke-linecap="round"/>
+                  <line x1="50" y1="50" x2="20" y2="80" stroke="url(#hxg2)" stroke-width="18" stroke-linecap="round"/>
+                </svg>
+                <h1>Rasxod</h1>
+            </div>
             <div style="display:flex;gap:4px;"><button class="export-icon-btn" onclick="openExportModal()"
                     title="Eksport">📤</button><button class="export-icon-btn" onclick="openPinSettings()"
                     title="PIN">🔑</button></div>
